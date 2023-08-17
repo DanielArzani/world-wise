@@ -1,0 +1,12 @@
+{
+    // Comments are supported, like tsconfig.json
+    "entryPoints": [
+        "src/components"
+    ],
+    "entryPointStrategy": "expand",
+    "out": "docs",
+    "readme": "none",
+    "exclude": [
+        "src/main.ts"
+    ]
+}
