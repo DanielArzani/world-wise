@@ -5,6 +5,9 @@ import Header from '../../components/Header';
 
 import bgImage from '../../assets/bg.jpg';
 
+/**
+ * The layout for the navbar and logo as well as what the app is about and a buttons to log in.
+ */
 function HomePage() {
   return (
     <Wrapper>
