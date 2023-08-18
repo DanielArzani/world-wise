@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import media from '../../utils/mediaQueries';
 
 function Navbar() {
   return (
@@ -27,12 +28,19 @@ const Nav = styled.nav`
   align-items: center;
   flex-wrap: wrap;
   gap: 2rem;
-
   margin: 0 auto;
 
-  /* TODO: Move this into component */
+  @media ${media.sm} {
+    margin: 0 0;
+  }
+
+  /* TODO: Move this into its component */
   & button {
     margin: 0 auto;
+
+    @media ${media.sm} {
+      margin: 0 0;
+    }
   }
 `;
 

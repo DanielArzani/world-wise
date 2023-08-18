@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import media from '../../utils/mediaQueries';
 
 import logo from '../../assets/logo.png';
 import Navbar from '../Navbar';
@@ -29,6 +30,10 @@ const Wrapper = styled.div`
   margin: 0 auto;
   margin-bottom: 1rem;
   transform: translateY(15%);
+
+  @media ${media.sm} {
+    margin: 0 0;
+  }
 `;
 
 const Logo = styled.img`
