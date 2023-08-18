@@ -111,6 +111,7 @@ li > * {
       GENERAL 
 ******************/
 body {
+  color: var(--color-light--2);
   font-family: 'Manrope', sans-serif;
 }
 

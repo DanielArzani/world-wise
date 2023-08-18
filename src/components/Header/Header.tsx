@@ -14,7 +14,7 @@ function Header() {
     <HeaderStyles>
       <Wrapper>
         <Link to={'/'}>
-          <Logo src={logo} alt='World Wise' />
+          <Logo src={logo} alt='' />
           <h1 className='sr-only'>WORLD WISE</h1>
         </Link>
       </Wrapper>

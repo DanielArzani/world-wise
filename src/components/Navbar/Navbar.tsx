@@ -38,7 +38,6 @@ const Nav = styled.nav`
     margin: 0 0;
   }
 
-  /* TODO: Move this into its component */
   & button {
     margin: 0 auto;
 

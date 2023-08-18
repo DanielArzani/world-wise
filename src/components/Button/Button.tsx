@@ -30,7 +30,8 @@ export default Button;
 export const ButtonStyles = styled.button`
   border: none;
   border-radius: 7px;
-  font-weight: medium;
-  padding: 0.3rem 1.2rem;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
   text-transform: uppercase;
 `;
