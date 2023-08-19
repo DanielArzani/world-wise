@@ -1,6 +1,7 @@
 import React from 'react';
 import ButtonLogin from '../ButtonLogin';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 function IntroSection() {
   return (
@@ -11,7 +12,9 @@ function IntroSection() {
         Never forget your wonderful experiences, and show your friends how you
         have wandered the world.
       </P>
-      <ButtonLogin>Start Tracking Now</ButtonLogin>
+      <ButtonLogin>
+        <Link to={'app'}>Start Tracking Now</Link>
+      </ButtonLogin>
     </Wrapper>
   );
 }

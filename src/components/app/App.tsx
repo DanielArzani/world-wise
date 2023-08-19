@@ -5,6 +5,8 @@ import PricingPage from '../../pages/PricingPage';
 import HomePage from '../../pages/HomePage';
 import NotFoundPage from '../NotFoundPage';
 import styled from 'styled-components';
+import ApplicationPage from '../../pages/ApplicationPage';
+import LoginPage from '../../pages/LoginPage';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path='/' element={<HomePage />} />
           <Route path='pricing' element={<PricingPage />} />
           <Route path='product' element={<ProductPage />} />
+          <Route path='login' element={<LoginPage />} />
+          <Route path='app' element={<ApplicationPage />} />
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
