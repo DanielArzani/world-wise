@@ -123,6 +123,10 @@ ul {
     UTILITIES
 ******************/
 
+.active {
+  color: var(--color-brand--2);
+}
+
 .cluster {
   display: flex;
   flex-wrap: wrap;
