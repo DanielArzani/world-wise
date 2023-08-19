@@ -43,6 +43,7 @@ const Wrapper = styled.div`
 const Main = styled.main`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 3rem;
   justify-content: center;
 

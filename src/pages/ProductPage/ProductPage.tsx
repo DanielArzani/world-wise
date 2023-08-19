@@ -52,6 +52,7 @@ const Main = styled.main`
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
+  flex-wrap: wrap;
   gap: 3rem;
   justify-content: center;
 
