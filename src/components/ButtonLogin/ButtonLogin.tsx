@@ -20,4 +20,10 @@ export default ButtonLogin;
 export const StyledButtonLogin = styled(ButtonStyles)`
   background-color: var(--color-brand--2);
   color: var(--color-dark--0);
+  position: relative;
+
+  & > a.active {
+    /* this is so that the colour when on the login page isn't the same as the bg colour */
+    color: var(--color-dark--0);
+  }
 `;

@@ -20,9 +20,9 @@ function Navbar() {
         </Li>
       </Ul>
 
-      <ButtonLogin>
-        <NavLink to='/login'>Login</NavLink>
-      </ButtonLogin>
+      <NavLink to='/login'>
+        <ButtonLogin>Login</ButtonLogin>
+      </NavLink>
     </Nav>
   );
 }
