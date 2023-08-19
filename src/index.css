@@ -134,6 +134,10 @@ a {
   color: var(--color-brand--2);
 }
 
+a.active {
+  color: var(--color-dark--0);
+}
+
 .cluster {
   display: flex;
   flex-wrap: wrap;

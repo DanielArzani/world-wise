@@ -1,3 +1,17 @@
+/**
+ * How to use
+ * import styled from 'styled-components';
+ * import media from '../utils/mediaQueries';
+ *
+ * const Box = styled.div`
+ * background: blue;
+ *
+ *  @media ${media.md} {
+ *    background: red;
+ *  }
+ * `;
+ * */
+
 type MediaQuerySizes = {
   xsm: number;
   sm: number;
