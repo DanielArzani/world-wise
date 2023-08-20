@@ -31,7 +31,7 @@ export const ButtonStyles = styled.button`
   border: none;
   border-radius: 7px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
   padding: 0.5rem 1.2rem;
   text-transform: uppercase;
 `;
