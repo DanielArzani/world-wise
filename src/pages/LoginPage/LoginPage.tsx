@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import ButtonLogin from '../../components/ButtonLogin';
-import { Link } from 'react-router-dom';
 import media from '../../utils/mediaQueries';
 import Header from '../../components/Header';
+import LoginLink from '../../components/LoginLink';
 
 /**
  * The page which displays the form to login to use the application
@@ -24,11 +23,9 @@ function LoginPage() {
             <Input type='password' id='password' />
           </FormControls>
 
-          <div>
-            <ButtonLogin>
-              <Link to='/app'>Login</Link>
-            </ButtonLogin>
-          </div>
+          <LinkWrapper>
+            <LoginLink endpoint='/app'>Login</LoginLink>
+          </LinkWrapper>
         </Form>
       </FormWrapper>
     </Wrapper>
@@ -97,4 +94,8 @@ const Input = styled.input`
     outline: none;
     background-color: #fff;
   }
+`;
+
+const LinkWrapper = styled.div`
+  align-self: start;
 `;

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import media from '../../utils/mediaQueries';
-import ButtonLogin from '../ButtonLogin';
+import LoginLink from '../LoginLink';
 
 /**
  * The navigation bar, also holds a log in button
@@ -20,9 +20,7 @@ function Navbar() {
         </Li>
       </Ul>
 
-      <NavLink to='/login'>
-        <ButtonLogin>Login</ButtonLogin>
-      </NavLink>
+      <LoginLink>Login</LoginLink>
     </Nav>
   );
 }

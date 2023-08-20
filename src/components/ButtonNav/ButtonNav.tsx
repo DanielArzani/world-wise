@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../Button/Button';
 import styled from 'styled-components';
 
 function ButtonNav() {
@@ -21,6 +20,6 @@ const Li = styled.li`
   border-radius: 5px;
 `;
 
-const ButtonNavChoice = styled(Button)`
+const ButtonNavChoice = styled.button`
   font-size: 0.75rem;
 `;

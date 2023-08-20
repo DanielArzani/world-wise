@@ -3,14 +3,15 @@ import styled from 'styled-components';
 
 import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
-import Button from '../Button';
 import ButtonNav from '../ButtonNav';
 
 function Sidebar() {
   return (
     <Wrapper>
       <ImageWrapper className='center'>
-        <img src={logo} alt='' width='200px' />
+        <Link to='/'>
+          <img src={logo} alt='' width='200px' />
+        </Link>
       </ImageWrapper>
 
       <nav className='center'>
@@ -23,17 +24,17 @@ function Sidebar() {
       <VisitedUl>
         <li>
           <Link to=''>
-            <Button>Lisbon</Button>
+            <button>Lisbon</button>
           </Link>
         </li>
         <li>
           <Link to=''>
-            <Button>Madrid</Button>
+            <button>Madrid</button>
           </Link>
         </li>
         <li>
           <Link to=''>
-            <Button>Paris</Button>
+            <button>Paris</button>
           </Link>
         </li>
       </VisitedUl>
