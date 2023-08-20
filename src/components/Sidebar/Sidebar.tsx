@@ -3,41 +3,24 @@ import styled from 'styled-components';
 
 import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
-import ButtonNav from '../ButtonNav';
+import SidebarNavigation from '../SidebarNavigation';
+import VisitedCities from '../VisitedCities';
 
+/**
+ * Controls the layout for the sidebars content
+ */
 function Sidebar() {
   return (
     <Wrapper>
-      <ImageWrapper className='center'>
+      <ImageWrapper>
         <Link to='/'>
-          <img src={logo} alt='' width='200px' />
+          <img src={logo} alt='Go back to homepage' width='200px' />
         </Link>
       </ImageWrapper>
 
-      <nav className='center'>
-        <ChoicesUl>
-          <ButtonNav />
-          <ButtonNav />
-        </ChoicesUl>
-      </nav>
+      <SidebarNavigation />
 
-      <VisitedUl>
-        <li>
-          <Link to=''>
-            <button>Lisbon</button>
-          </Link>
-        </li>
-        <li>
-          <Link to=''>
-            <button>Madrid</button>
-          </Link>
-        </li>
-        <li>
-          <Link to=''>
-            <button>Paris</button>
-          </Link>
-        </li>
-      </VisitedUl>
+      <VisitedCities />
 
       <Footer>
         <p>© Copyright 2023 by WorldWise Inc.</p>
@@ -49,29 +32,49 @@ function Sidebar() {
 export default Sidebar;
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  grid-template-rows: repeat(3, max-content) 1fr;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 
   min-height: 100%;
+
+  /* image wrapper */
+  & > :nth-child(1) {
+    grid-column: 2/3;
+    margin-bottom: 2rem;
+  }
+
+  /* sidebar nav */
+  & > :nth-child(2) {
+    grid-column: 2/3;
+  }
+
+  /* visited cities */
+  & > :nth-child(3) {
+    grid-column: 2/-1;
+  }
+
+  /* footer */
+  & > :nth-child(4) {
+    grid-column: 2/3;
+  }
 `;
 
 const ImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
   margin-top: 2rem;
 `;
 
-const ChoicesUl = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const VisitedUl = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
 const Footer = styled.footer`
+  display: flex;
+  justify-content: center;
+
+  color: var(--color-light--1);
+  font-size: 0.75rem;
   margin-top: auto;
+  margin-bottom: 2rem;
 `;
