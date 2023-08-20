@@ -2,37 +2,31 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import CloseButton from '../CloseButton';
+import { CityType } from '../../types/City';
+import formatDate from '../../utils/formateDate';
+
+type VisitedCitiesProps = {
+  cityData: CityType;
+};
 
 /**
  * A list of visited cities that will change the url endpoint on click
+ * @param cityData The data of visited cities
  */
-function VisitedCities() {
+function VisitedCities({ cityData }: VisitedCitiesProps) {
   return (
     <Ul>
-      <CityListItem
-        dateVisited='January 1, 2022'
-        flag='🇨🇦'
-        endpoint='/'
-        cityName='Toronto'
-      />
-      <CityListItem
-        dateVisited='January 1, 2022'
-        flag='🇨🇦'
-        endpoint='/'
-        cityName='Toronto'
-      />
-      <CityListItem
-        dateVisited='January 1, 2022'
-        flag='🇨🇦'
-        endpoint='/'
-        cityName='Toronto'
-      />
-      <CityListItem
-        dateVisited='January 1, 2022'
-        flag='🇨🇦'
-        endpoint='/'
-        cityName='Toronto'
-      />
+      {cityData.map((data) => {
+        return (
+          <CityListItem
+            key={data.id}
+            dateVisited={data.date}
+            flag={data.emoji}
+            endpoint='/'
+            cityName={data.cityName}
+          />
+        );
+      })}
     </Ul>
   );
 }
@@ -62,6 +56,13 @@ type CityListItemProps = {
  * @param cityName The name of the city
  * @param dateVisited The date that the city was visited
  * @param endpoint The route that the user should go on click
+ * @example
+ * <CityListItem
+ *   dateVisited='January 1, 2022'
+ *   flag='🇨🇦'
+ *   endpoint='/'
+ *   cityName='Toronto'
+ * />
  */
 function CityListItem({
   cityName,
@@ -81,7 +82,7 @@ function CityListItem({
         </ChildWrapper>
 
         <ChildWrapper>
-          (<Time dateTime='2022-01-01'>{dateVisited}</Time>)
+          <Time dateTime={dateVisited}>{formatDate(dateVisited)}</Time>
           <CloseButton />
         </ChildWrapper>
       </NavLink>

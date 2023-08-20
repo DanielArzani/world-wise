@@ -7,7 +7,8 @@
     "dev": "vite --open",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate-docs": "npx typedoc"
+    "generate-docs": "npx typedoc",
+    "server": "json-server --watch src/data/cities.json"
   },
   "dependencies": {
     "eslint": "^8.47.0",
@@ -25,6 +26,7 @@
     "@vitejs/plugin-react": "^3.1.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "autoprefixer": "^10.4.13",
+    "json-server": "^0.17.3",
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "typedoc": "^0.24.0-beta.2",

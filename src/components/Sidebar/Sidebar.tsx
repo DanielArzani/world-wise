@@ -5,11 +5,17 @@ import logo from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
 import SidebarNavigation from '../SidebarNavigation';
 import VisitedCities from '../VisitedCities';
+import { CityType } from '../../types/City';
+
+type SideBarProps = {
+  cityData: CityType;
+};
 
 /**
  * Controls the layout for the sidebars content
+ * @param cityData The data of visited cities
  */
-function Sidebar() {
+function Sidebar({ cityData }: SideBarProps) {
   return (
     <Wrapper>
       <ImageWrapper>
@@ -20,7 +26,7 @@ function Sidebar() {
 
       <SidebarNavigation />
 
-      <VisitedCities />
+      <VisitedCities cityData={cityData} />
 
       <Footer>
         <p>© Copyright 2023 by WorldWise Inc.</p>
