@@ -39,9 +39,13 @@ function CityInfo({ oneCityData }: CityInfoProps) {
 
       <WikiLinkWrapper>
         <h3>Learn More</h3>
-        <Link to={`https://www.wikipedia.org/wiki/${oneCityData.cityName}`}>
+        <a
+          href={`https://www.wikipedia.org/wiki/${oneCityData.cityName}`}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           Check out {cityName} on Wikipedia →
-        </Link>
+        </a>
       </WikiLinkWrapper>
 
       <BackButton>← BACK</BackButton>
