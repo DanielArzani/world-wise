@@ -29,7 +29,7 @@ function Sidebar({ cityData }: SideBarProps) {
       <VisitedCities cityData={cityData} />
 
       <Footer>
-        <p>© Copyright 2023 by WorldWise Inc.</p>
+        <p>© Copyright {new Date().getFullYear()} by WorldWise Inc.</p>
       </Footer>
     </Wrapper>
   );
@@ -49,22 +49,25 @@ const Wrapper = styled.div`
   /* image wrapper */
   & > :nth-child(1) {
     grid-column: 2/3;
-    margin-bottom: 2rem;
+    grid-row: 1/2;
   }
 
   /* sidebar nav */
   & > :nth-child(2) {
     grid-column: 2/3;
+    grid-row: 2/3;
   }
 
   /* visited cities */
   & > :nth-child(3) {
     grid-column: 2/-1;
+    grid-row: 3/4;
   }
 
   /* footer */
   & > :nth-child(4) {
     grid-column: 2/3;
+    grid-row: 4/5;
   }
 `;
 
