@@ -10,15 +10,25 @@ import LoginPage from '../../pages/LoginPage';
 import { CityType } from '../../types/City';
 import VisitedCities from '../VisitedCities';
 
+const BASE_URL = 'http://localhost:3000';
+
 function App() {
   // TODO: Remove this fetch
-  const [cityData, setCityData] = useState<CityType>([]);
+  const [cityData, setCityData] = useState<CityType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('http://localhost:3000/cities');
-      const data: CityType = await res.json();
-      setCityData(data);
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${BASE_URL}/cities`);
+        const data: CityType[] = await res.json();
+        setCityData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, []);
 
@@ -31,10 +41,17 @@ function App() {
           <Route path='product' element={<ProductPage />} />
           <Route path='login' element={<LoginPage />} />
           <Route path='app' element={<ApplicationPage />}>
-            <Route index element={<VisitedCities cityData={cityData} />} />
+            <Route
+              index
+              element={
+                <VisitedCities cityData={cityData} isLoading={isLoading} />
+              }
+            />
             <Route
               path='cities'
-              element={<VisitedCities cityData={cityData} />}
+              element={
+                <VisitedCities cityData={cityData} isLoading={isLoading} />
+              }
             />
             <Route path='countries' element={<p>List of countries</p>} />
             <Route path='form' element={<p>Form</p>} />

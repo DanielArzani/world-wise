@@ -1,4 +1,4 @@
-type CityInfo = {
+export type CityType = {
   cityName: string;
   country: string;
   emoji: string;
@@ -10,5 +10,3 @@ type CityInfo = {
   };
   id: number;
 };
-
-export type CityType = CityInfo[];

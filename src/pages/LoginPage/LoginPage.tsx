@@ -24,7 +24,7 @@ function LoginPage() {
           </FormControls>
 
           <LinkWrapper>
-            <LoginLink endpoint='/app'>Login</LoginLink>
+            <LoginLink endpoint='/app/cities'>Login</LoginLink>
           </LinkWrapper>
         </Form>
       </FormWrapper>

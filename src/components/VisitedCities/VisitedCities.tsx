@@ -4,34 +4,67 @@ import styled from 'styled-components';
 import CloseButton from '../CloseButton';
 import { CityType } from '../../types/City';
 import formatDate from '../../utils/formateDate';
+import Loader from '../Loader';
 
 type VisitedCitiesProps = {
-  cityData: CityType;
+  cityData: CityType[];
+  isLoading: boolean;
 };
 
 /**
  * A list of visited cities that will change the url endpoint on click
  * @param cityData The data of visited cities
+ * @param isLoading Whether the data has loaded or not
  */
-function VisitedCities({ cityData }: VisitedCitiesProps) {
+function VisitedCities({ cityData, isLoading }: VisitedCitiesProps) {
   return (
-    <Ul>
-      {cityData.map((data) => {
-        return (
-          <CityListItem
-            key={data.id}
-            dateVisited={data.date}
-            flag={data.emoji}
-            endpoint='/app/countries'
-            cityName={data.cityName}
-          />
-        );
-      })}
-    </Ul>
+    <>
+      {isLoading && (
+        <LoadingSpinnerWrapper>
+          <Loader />
+        </LoadingSpinnerWrapper>
+      )}
+
+      {!isLoading && cityData.length === 0 && (
+        <Message>Add your first city by clicking on a city on the map!</Message>
+      )}
+
+      {!isLoading && cityData.length > 0 && (
+        <Ul>
+          {cityData.map((data) => (
+            <CityListItem
+              key={data.id}
+              dateVisited={data.date}
+              flag={data.emoji}
+              endpoint='/app/countries'
+              cityName={data.cityName}
+            />
+          ))}
+        </Ul>
+      )}
+    </>
   );
 }
 
 export default VisitedCities;
+
+const LoadingSpinnerWrapper = styled.div`
+  transform: translate(-7%, 10rem);
+  grid-column: 2/-1;
+  grid-row: 3/4;
+`;
+
+const Message = styled.div`
+  border: 1px solid var(--color-brand--2);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.5rem;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--color-brand--2);
+  margin-top: 1rem;
+  margin-right: 1rem;
+`;
 
 const Ul = styled.ul`
   display: flex;

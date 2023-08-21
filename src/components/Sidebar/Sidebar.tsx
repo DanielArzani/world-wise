@@ -7,8 +7,9 @@ import SidebarNavigation from '../SidebarNavigation';
 // import VisitedCities from '../VisitedCities';
 import { CityType } from '../../types/City';
 
+// TODO: Change this
 type SideBarProps = {
-  cityData: CityType;
+  cityData?: CityType;
 };
 
 /**
