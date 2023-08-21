@@ -36,7 +36,7 @@ function VisitedCities({ cityData, isLoading }: VisitedCitiesProps) {
               key={data.id}
               dateVisited={data.date}
               flag={data.emoji}
-              endpoint='/app/countries'
+              endpoint={`/app/cities/${data.id}`}
               cityName={data.cityName}
             />
           ))}

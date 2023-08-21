@@ -10,6 +10,7 @@ import LoginPage from '../../pages/LoginPage';
 import { CityType } from '../../types/City';
 import VisitedCities from '../VisitedCities';
 import VisitedCountries from '../VisitedCountries';
+import CityInfo from '../CityInfo';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -54,6 +55,16 @@ function App() {
                 <VisitedCities cityData={cityData} isLoading={isLoading} />
               }
             />
+            {cityData.map((data) => {
+              return (
+                <Route
+                  key={data.id}
+                  path={`cities/${data.id}`}
+                  element={<CityInfo oneCityData={data} />}
+                />
+              );
+            })}
+
             <Route
               path='countries'
               element={

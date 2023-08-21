@@ -62,7 +62,9 @@ const Wrapper = styled.div`
 
   /* visited cities */
   & > :nth-child(3) {
-    grid-column: 2/-1;
+    /* grid-column: 2/-1; */
+    grid-column: 2/3;
+
     grid-row: 3/4;
   }
 
