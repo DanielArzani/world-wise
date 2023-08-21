@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import logo from '../../assets/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import SidebarNavigation from '../SidebarNavigation';
-import VisitedCities from '../VisitedCities';
+// import VisitedCities from '../VisitedCities';
 import { CityType } from '../../types/City';
 
 type SideBarProps = {
@@ -26,7 +26,8 @@ function Sidebar({ cityData }: SideBarProps) {
 
       <SidebarNavigation />
 
-      <VisitedCities cityData={cityData} />
+      {/* <VisitedCities cityData={cityData} /> */}
+      <Outlet />
 
       <Footer>
         <p>© Copyright {new Date().getFullYear()} by WorldWise Inc.</p>

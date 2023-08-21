@@ -22,7 +22,7 @@ function VisitedCities({ cityData }: VisitedCitiesProps) {
             key={data.id}
             dateVisited={data.date}
             flag={data.emoji}
-            endpoint='/'
+            endpoint='/app/countries'
             cityName={data.cityName}
           />
         );

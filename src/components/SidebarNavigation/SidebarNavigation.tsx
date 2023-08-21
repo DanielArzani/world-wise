@@ -7,7 +7,7 @@ import styled from 'styled-components';
  */
 function SidebarNavigation() {
   return (
-    <nav>
+    <nav className='sidebar-nav'>
       <ChoicesUl>
         <Li>
           <NavLink to='/app/cities'>Cities</NavLink>
@@ -30,8 +30,13 @@ const ChoicesUl = styled.ul`
 `;
 
 const Li = styled.li`
-  background-color: var(--color-dark--2);
-  border-radius: 5px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
+  & > a {
+    border-radius: 5px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+
+    &.active {
+      background-color: var(--color-dark--0);
+    }
+  }
 `;

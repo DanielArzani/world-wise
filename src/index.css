@@ -134,6 +134,10 @@ a {
   color: var(--color-brand--2);
 }
 
+.sidebar-nav *.active {
+  background-color: var(--color-dark--1);
+}
+
 .center {
   --measure: 50%;
 
