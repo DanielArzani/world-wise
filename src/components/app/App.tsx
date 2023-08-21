@@ -9,6 +9,7 @@ import ApplicationPage from '../../pages/ApplicationPage';
 import LoginPage from '../../pages/LoginPage';
 import { CityType } from '../../types/City';
 import VisitedCities from '../VisitedCities';
+import VisitedCountries from '../VisitedCountries';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -53,7 +54,12 @@ function App() {
                 <VisitedCities cityData={cityData} isLoading={isLoading} />
               }
             />
-            <Route path='countries' element={<p>List of countries</p>} />
+            <Route
+              path='countries'
+              element={
+                <VisitedCountries cityData={cityData} isLoading={isLoading} />
+              }
+            />
             <Route path='form' element={<p>Form</p>} />
           </Route>
           <Route path='*' element={<NotFoundPage />} />
