@@ -15,9 +15,22 @@ import CityInfo from '../CityInfo';
 const BASE_URL = 'http://localhost:3000';
 
 function App() {
-  // TODO: Remove this fetch
+  // TODO: Remove this fetch` and the temp data
   const [cityData, setCityData] = useState<CityType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const tempData = {
+    cityName: 'Lisbon',
+    emoji: '🇵🇹',
+    date: '2027-10-31T15:59:59.138Z',
+    notes: 'My favorite city so far!',
+    country: 'Portugal',
+    id: 241512351423,
+    position: {
+      lat: 251,
+      lng: 213,
+    },
+  };
 
   useEffect(() => {
     (async () => {
@@ -55,7 +68,12 @@ function App() {
                 <VisitedCities cityData={cityData} isLoading={isLoading} />
               }
             />
-            {cityData.map((data) => {
+            <Route
+              path='cities:id'
+              element={<CityInfo oneCityData={tempData} />}
+            />
+            {/* //! data.id shouldn't actually be available here in app.tsx anyway */}
+            {/* {cityData.map((data) => {
               return (
                 <Route
                   key={data.id}
@@ -63,7 +81,7 @@ function App() {
                   element={<CityInfo oneCityData={data} />}
                 />
               );
-            })}
+            })} */}
 
             <Route
               path='countries'

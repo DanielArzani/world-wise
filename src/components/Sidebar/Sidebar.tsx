@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import logo from '../../assets/logo.png';
 import { Link, Outlet } from 'react-router-dom';
 import SidebarNavigation from '../SidebarNavigation';
-// import VisitedCities from '../VisitedCities';
 import { CityType } from '../../types/City';
 
 // TODO: Change this
@@ -25,10 +24,11 @@ function Sidebar({ cityData }: SideBarProps) {
         </Link>
       </ImageWrapper>
 
-      <SidebarNavigation />
+      <LocationWrapper>
+        <SidebarNavigation />
 
-      {/* <VisitedCities cityData={cityData} /> */}
-      <Outlet />
+        <Outlet />
+      </LocationWrapper>
 
       <Footer>
         <p>© Copyright {new Date().getFullYear()} by WorldWise Inc.</p>
@@ -41,10 +41,9 @@ export default Sidebar;
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 10fr 1fr;
-  grid-template-rows: repeat(3, max-content) 1fr;
-  align-items: center;
-  gap: 1rem;
+  grid-template-columns: 10% 90% 10%;
+  grid-template-rows: max-content max-content 1fr;
+  justify-content: center;
 
   min-height: 100%;
 
@@ -52,26 +51,25 @@ const Wrapper = styled.div`
   & > :nth-child(1) {
     grid-column: 2/3;
     grid-row: 1/2;
+
+    margin-bottom: 2rem;
   }
 
-  /* sidebar nav */
+  /* sidebar nav and visited cities/countries */
   & > :nth-child(2) {
     grid-column: 2/3;
     grid-row: 2/3;
-  }
 
-  /* visited cities */
-  & > :nth-child(3) {
-    /* grid-column: 2/-1; */
-    grid-column: 2/3;
-
-    grid-row: 3/4;
+    /* visited cities/countries */
+    & > :nth-child(2) {
+      align-self: center;
+    }
   }
 
   /* footer */
-  & > :nth-child(4) {
+  & > :nth-child(3) {
     grid-column: 2/3;
-    grid-row: 4/5;
+    grid-row: 3/4;
   }
 `;
 
@@ -80,6 +78,12 @@ const ImageWrapper = styled.div`
   justify-content: center;
 
   margin-top: 2rem;
+`;
+
+const LocationWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 `;
 
 const Footer = styled.footer`

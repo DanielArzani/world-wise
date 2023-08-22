@@ -1,7 +1,6 @@
 import React from 'react';
 import { CityType } from '../../types/City';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import formatDate from '../../utils/formateDate';
 
 type CityInfoProps = {

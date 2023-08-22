@@ -36,7 +36,7 @@ function VisitedCities({ cityData, isLoading }: VisitedCitiesProps) {
               key={data.id}
               dateVisited={data.date}
               flag={data.emoji}
-              endpoint={`/app/cities/${data.id}`}
+              endpoint={`${data.id}`}
               cityName={data.cityName}
             />
           ))}
@@ -73,7 +73,6 @@ const Ul = styled.ul`
   justify-content: center;
 
   max-width: 75%;
-  transform: translateX(7%);
 `;
 
 type CityListItemProps = {
@@ -131,6 +130,7 @@ const Li = styled.li`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 5rem;
 
     box-shadow: inset 5px 0 0 0 var(--color-brand--2);
     padding: 0.25rem 1rem;

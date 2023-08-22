@@ -107,7 +107,9 @@ const Li = styled.li`
 
   display: flex;
   align-items: center;
+  flex-basis: 33.33333%;
   flex-direction: column;
+  flex-grow: 1;
   gap: 0.2rem;
 
   background-color: var(--color-dark--2);
@@ -116,4 +118,5 @@ const Li = styled.li`
   font-size: 1.0625rem;
   font-weight: 600;
   padding: 1rem 2rem;
+  max-width: 45%;
 `;

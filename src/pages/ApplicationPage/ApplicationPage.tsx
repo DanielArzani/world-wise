@@ -19,9 +19,7 @@ function ApplicationPage() {
 
   return (
     <Wrapper className='with-sidebar'>
-      <div>
-        <Sidebar />
-      </div>
+      <Sidebar />
 
       <div style={{ backgroundColor: 'gray' }}>LEAFLET MAP</div>
     </Wrapper>
