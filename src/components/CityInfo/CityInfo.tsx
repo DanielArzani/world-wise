@@ -2,8 +2,9 @@ import React from 'react';
 import { CityType } from '../../types/City';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCityFromUrl } from '../../hooks/useCityFromUrl';
+import Button from '../Button';
 
 type CityInfoProps = {
   oneCityData: CityType[];
@@ -15,6 +16,7 @@ type CityInfoProps = {
  */
 function CityInfo({ oneCityData }: CityInfoProps) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const matchedCity = useCityFromUrl(oneCityData);
 
   if (matchedCity === undefined)
@@ -62,7 +64,9 @@ function CityInfo({ oneCityData }: CityInfoProps) {
         </a>
       </WikiLinkWrapper>
 
-      <BackButton>← BACK</BackButton>
+      <Button type='back' onClick={() => navigate(-1)}>
+        ← BACK
+      </Button>
     </Wrapper>
   );
 }
@@ -87,6 +91,10 @@ const Wrapper = styled.div`
     font-size: 0.6875rem;
     font-weight: 800;
     text-transform: uppercase;
+  }
+
+  & button {
+    align-self: start;
   }
 `;
 
@@ -129,19 +137,4 @@ const WikiLinkWrapper = styled.div`
     color: var(--color-brand--1);
     text-decoration: underline;
   }
-`;
-
-const BackButton = styled.button`
-  align-self: flex-start;
-
-  background: none;
-  border: 1px solid var(--color-light--2);
-  border-radius: 5px;
-  color: inherit;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  text-transform: uppercase;
 `;

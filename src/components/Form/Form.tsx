@@ -1,5 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
+import Button from '../Button';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Convert a country code to its corresponding flag emoji.
@@ -24,6 +26,7 @@ function Form(): JSX.Element {
     new Date().toISOString().split('T')[0]
   );
   const [notes, setNotes] = useState<string>('');
+  const navigate = useNavigate();
 
   /**
    * Generic handler for input changes.
@@ -84,8 +87,10 @@ function Form(): JSX.Element {
 
       {/* Form action buttons */}
       <ButtonWrapper>
-        <button type='submit'>Add</button>
-        <button type='button'>&larr; Back</button>
+        <Button type='primary'>Add</Button>
+        <Button onClick={() => navigate(-1)} type='back'>
+          &larr; Back
+        </Button>
       </ButtonWrapper>
     </FormWrapper>
   );
