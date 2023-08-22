@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 /**
@@ -7,12 +7,17 @@ import styled from 'styled-components';
  */
 function Map() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const lat = searchParams.get('lat');
   const lng = searchParams.get('lng');
 
   return (
-    <Wrapper>
+    <Wrapper
+      onClick={() => {
+        navigate('form');
+      }}
+    >
       <h2>LEAFLET MAP COMPONENT</h2>
       <p>latitude: {lat}</p>
       <p>longitude: {lng}</p>

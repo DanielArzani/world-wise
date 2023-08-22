@@ -11,6 +11,7 @@ import { CityType } from '../../types/City';
 import VisitedCities from '../VisitedCities';
 import VisitedCountries from '../VisitedCountries';
 import CityInfo from '../CityInfo';
+import Form from '../Form';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -66,7 +67,7 @@ function App() {
                 <VisitedCountries cityData={cityData} isLoading={isLoading} />
               }
             />
-            <Route path='form' element={<p>Form</p>} />
+            <Route path='form' element={<Form />} />
           </Route>
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
