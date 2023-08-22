@@ -69,7 +69,7 @@ function App() {
               }
             />
             <Route
-              path='cities:id'
+              path='cities/:id'
               element={<CityInfo oneCityData={tempData} />}
             />
             {/* //! data.id shouldn't actually be available here in app.tsx anyway */}
