@@ -2,9 +2,11 @@ import React from 'react';
 import { CityType } from '../../types/City';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
+import { useParams } from 'react-router-dom';
+import { useCityFromUrl } from '../../hooks/useCityFromUrl';
 
 type CityInfoProps = {
-  oneCityData: CityType;
+  oneCityData: CityType[];
 };
 
 /**
@@ -12,17 +14,30 @@ type CityInfoProps = {
  * @param oneCityData The data about the city that should be displayed
  */
 function CityInfo({ oneCityData }: CityInfoProps) {
-  const { cityName, country, emoji, date, notes } = oneCityData;
+  const { id } = useParams();
+  const matchedCity = useCityFromUrl(oneCityData);
+
+  if (matchedCity === undefined)
+    return (
+      <>
+        <h2>No Matching City</h2>
+      </>
+    );
+
+  const { cityName, country, emoji, date, notes } = matchedCity;
 
   return (
     <Wrapper>
       <CityNameWrapper>
-        <h2>CityName</h2>
+        <h2>City Name</h2>
         <div>
           <span role='img' aria-label={`Flag of ${country}`}>
             {emoji}
           </span>
-          <p>{cityName}</p>
+          {/* TODO: Remove this */}
+          <p>
+            {cityName}: {id}
+          </p>
         </div>
       </CityNameWrapper>
 
@@ -39,7 +54,7 @@ function CityInfo({ oneCityData }: CityInfoProps) {
       <WikiLinkWrapper>
         <h3>Learn More</h3>
         <a
-          href={`https://www.wikipedia.org/wiki/${oneCityData.cityName}`}
+          href={`https://www.wikipedia.org/wiki/${matchedCity.cityName}`}
           target='_blank'
           rel='noopener noreferrer'
         >

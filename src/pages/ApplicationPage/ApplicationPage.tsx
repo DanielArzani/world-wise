@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Sidebar from '../../components/Sidebar';
+import Map from '../../components/Map';
 // import { CityType } from '../../types/City';
 
 /**
@@ -21,7 +22,7 @@ function ApplicationPage() {
     <Wrapper className='with-sidebar'>
       <Sidebar />
 
-      <div style={{ backgroundColor: 'gray' }}>LEAFLET MAP</div>
+      <Map />
     </Wrapper>
   );
 }

@@ -19,19 +19,6 @@ function App() {
   const [cityData, setCityData] = useState<CityType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const tempData = {
-    cityName: 'Lisbon',
-    emoji: '🇵🇹',
-    date: '2027-10-31T15:59:59.138Z',
-    notes: 'My favorite city so far!',
-    country: 'Portugal',
-    id: 241512351423,
-    position: {
-      lat: 251,
-      lng: 213,
-    },
-  };
-
   useEffect(() => {
     (async () => {
       try {
@@ -70,18 +57,8 @@ function App() {
             />
             <Route
               path='cities/:id'
-              element={<CityInfo oneCityData={tempData} />}
+              element={<CityInfo oneCityData={cityData} />}
             />
-            {/* //! data.id shouldn't actually be available here in app.tsx anyway */}
-            {/* {cityData.map((data) => {
-              return (
-                <Route
-                  key={data.id}
-                  path={`cities/${data.id}`}
-                  element={<CityInfo oneCityData={data} />}
-                />
-              );
-            })} */}
 
             <Route
               path='countries'
