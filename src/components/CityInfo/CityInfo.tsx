@@ -1,36 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
 import { useNavigate, useParams } from 'react-router-dom';
-// import { useCityFromUrl } from '../../hooks/useCityFromUrl';
 import Button from '../Button';
-// import { useCity } from '../../contexts/CityContext';
-import { CityType } from '../../types/City';
 import Loader from '../Loader';
-
-const BASE_URL = 'http://localhost:3000/cities';
+import { useCity } from '../../contexts/CityContext';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.
  */
 function CityInfo() {
   const navigate = useNavigate();
-  const [cityData, setCityData] = useState<CityType>();
   const cityId = useParams();
+  const { getCity, currentCity, isLoading } = useCity();
 
+  // FIXME: The component mounts and un-mounts very quickly and some times even after the loading spinner, the component with stale values appears for a few seconds before the data changes to match the most recent data. Strange bugs happen at various times too such as flickering between old and new data
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch(`${BASE_URL}/${cityId.id}`);
-        const data = await res.json();
-        setCityData(data);
-      } catch (error) {
-        if (error) console.error(error);
-      }
-    })();
-  }, [cityId]);
+    if (cityId.id != null) {
+      getCity(Number(cityId.id));
+    }
+  }, [cityId.id, getCity]);
 
-  if (cityData === undefined) {
+  if (!currentCity || isLoading) {
     return (
       <>
         <Loader />
@@ -38,7 +29,7 @@ function CityInfo() {
     );
   }
 
-  const { cityName, country, emoji, date, notes } = cityData;
+  const { cityName, country, emoji, date, notes } = currentCity;
 
   return (
     <Wrapper>
