@@ -44,6 +44,9 @@ function CityProvider({ children }: CityProviderProps) {
   );
 }
 
+/**
+ * The list of visited cities as well as the current loading state
+ */
 function useCity() {
   const context = useContext(CityContext);
   if (context == null) {
