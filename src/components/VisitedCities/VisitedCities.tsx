@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import CloseButton from '../CloseButton';
 import formatDate from '../../utils/formateDate';
@@ -35,6 +35,7 @@ function VisitedCities() {
               flag={data.emoji}
               endpoint={`${data.id}?lat=${data.position.lat}&lng=${data.position.lng}`}
               cityName={data.cityName}
+              id={data.id}
             />
           ))}
         </Ul>
@@ -77,6 +78,7 @@ type CityListItemProps = {
   dateVisited: string;
   endpoint: string;
   flag: string;
+  id: number;
 };
 
 /**
@@ -85,6 +87,7 @@ type CityListItemProps = {
  * @param cityName The name of the city
  * @param dateVisited The date that the city was visited
  * @param endpoint The route that the user should go on click
+ * @param id The id of the city list item
  * @example
  * <CityListItem
  *   dateVisited='January 1, 2022'
@@ -98,10 +101,22 @@ function CityListItem({
   dateVisited,
   endpoint,
   flag,
+  id,
 }: CityListItemProps) {
+  const { currentCity } = useCity();
+
+  let cityId;
+  if (currentCity !== undefined) {
+    cityId = currentCity.id;
+  }
+
+  // FIXME: Fix the styles on cityItem--active
   return (
     <Li>
-      <NavLink to={endpoint}>
+      <NavLink
+        to={endpoint}
+        className={`${id === cityId ? 'cityItem--active' : ''}`}
+      >
         <ChildWrapper>
           <P>
             <span>{flag}</span>

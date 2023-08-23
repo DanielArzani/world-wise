@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../Button';
 import Loader from '../Loader';
-import { CityType } from '../../types/City';
 import { useCity } from '../../contexts/CityContext';
-
-const BASE_URL = 'http://localhost:3000';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.

@@ -154,6 +154,11 @@ a {
   align-items: center;
 }
 
+.cityItem--active {
+  border: 2px solid var(--color-brand--2);
+  border-left: 5px solid var(--color-brand--2);
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px !important;

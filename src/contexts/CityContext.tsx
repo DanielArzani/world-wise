@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { CityType } from '../types/City';
@@ -25,7 +26,7 @@ type CityProviderProps = {
 };
 
 /**
- * Provides an array of the the CityType as well as the loading state of the fetched cities
+ * Provides information on cities of the CityType as well as the loading state of the fetched cities
  * @param children The components that should be able to use this data
  */
 function CityProvider({ children }: CityProviderProps) {
@@ -72,21 +73,20 @@ function CityProvider({ children }: CityProviderProps) {
       setIsLoading(false);
     }
   }, []);
-
-  return (
-    <CityContext.Provider
-      value={{
-        cityData,
-        isLoading,
-        currentCity,
-        setCurrentCity,
-        setIsLoading,
-        getCity,
-      }}
-    >
-      {children}
-    </CityContext.Provider>
+  // FIXME: React is creating a new object because its deeming that whats being passed in here isn't passing its equality check
+  const value = useMemo(
+    () => ({
+      cityData,
+      isLoading,
+      currentCity,
+      setCurrentCity,
+      setIsLoading,
+      getCity,
+    }),
+    [cityData, isLoading, currentCity, getCity]
   );
+
+  return <CityContext.Provider value={value}>{children}</CityContext.Provider>;
 }
 
 /**
