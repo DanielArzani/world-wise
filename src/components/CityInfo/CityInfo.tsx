@@ -1,24 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCityFromUrl } from '../../hooks/useCityFromUrl';
 import Button from '../Button';
-import { CityContext } from '../../pages/ApplicationPage';
+import { useCity } from '../../contexts/CityContext';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes
- * @param oneCityData The data about the city that should be displayed
  */
 function CityInfo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const cityContext = useContext(CityContext);
-  const matchedCity = useCityFromUrl(cityContext?.cityData);
-
-  if (cityContext == null) {
-    return <h1>Some random jsx</h1>;
-  }
+  const cityContext = useCity();
+  const matchedCity = useCityFromUrl(cityContext.cityData);
 
   if (matchedCity === undefined)
     return (
