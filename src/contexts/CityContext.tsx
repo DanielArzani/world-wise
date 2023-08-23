@@ -12,6 +12,7 @@ type CityContextType = {
   isLoading: boolean;
   currentCity: CityType | undefined;
   setCurrentCity: React.Dispatch<React.SetStateAction<CityType | undefined>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   getCity: (id: number) => Promise<void>;
 };
 
@@ -79,6 +80,7 @@ function CityProvider({ children }: CityProviderProps) {
         isLoading,
         currentCity,
         setCurrentCity,
+        setIsLoading,
         getCity,
       }}
     >

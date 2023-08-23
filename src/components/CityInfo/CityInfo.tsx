@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../Button';
 import Loader from '../Loader';
+import { CityType } from '../../types/City';
 import { useCity } from '../../contexts/CityContext';
+
+const BASE_URL = 'http://localhost:3000';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.
@@ -12,14 +15,38 @@ import { useCity } from '../../contexts/CityContext';
 function CityInfo() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { getCity, currentCity, isLoading } = useCity();
+  const { currentCity, isLoading, getCity } = useCity();
+  // const { isLoading, setIsLoading } = useCity();
+  // const [currentCity, setCurrentCity] = useState<CityType | undefined>();
 
   // FIXME: The City information appears briefly then flickers away then the loading state appears then the city information comes back with the new city information.
+  // In order to fix this, I moved the code within the getCity function from the CityContext to here.
+  // If currentCity and setCurrentCity are local then it will work but when I bring them in from context, this problem appears
+
   useEffect(() => {
     if (id != null) {
       getCity(Number(id));
     }
   }, [id, getCity]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       setIsLoading(true);
+  //       const res = await fetch(`${BASE_URL}/cities/${id}`, {
+  //         headers: {
+  //           'Cache-Control': 'no-cache',
+  //         },
+  //       });
+  //       const data: CityType = await res.json();
+  //       setCurrentCity(data);
+  //     } catch (error) {
+  //       if (error) console.error(error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   })();
+  // }, [id, setIsLoading]);
 
   if (!currentCity || isLoading) {
     return (
