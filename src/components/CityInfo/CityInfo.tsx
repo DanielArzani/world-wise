@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCityFromUrl } from '../../hooks/useCityFromUrl';
 import Button from '../Button';
 import { useCity } from '../../contexts/CityContext';
