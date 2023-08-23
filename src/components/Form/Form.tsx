@@ -19,9 +19,7 @@ export function convertToEmoji(countryCode: string): string {
 function Form(): JSX.Element {
   // State declarations for form fields
   const [cityName, setCityName] = useState<string>('');
-  // TODO: remove this later
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [country, setCountry] = useState<string>('');
+  // const [country, setCountry] = useState<string>('');
   const [date, setDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );

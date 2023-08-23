@@ -10,7 +10,6 @@ import { useCity } from '../../contexts/CityContext';
  * Displays information about a specific city as well as a link for further research and personal notes
  */
 function CityInfo() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const cityContext = useCity();
   const matchedCity = useCityFromUrl(cityContext.cityData);
@@ -32,10 +31,7 @@ function CityInfo() {
           <span role='img' aria-label={`Flag of ${country}`}>
             {emoji}
           </span>
-          {/* TODO: Remove this */}
-          <p>
-            {cityName}: {id}
-          </p>
+          <p>{cityName}</p>
         </div>
       </CityNameWrapper>
 
