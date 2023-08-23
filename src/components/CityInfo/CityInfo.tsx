@@ -1,27 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import formatDate from '../../utils/formateDate';
-import { useNavigate } from 'react-router-dom';
-import { useCityFromUrl } from '../../hooks/useCityFromUrl';
+import { useNavigate, useParams } from 'react-router-dom';
+// import { useCityFromUrl } from '../../hooks/useCityFromUrl';
 import Button from '../Button';
-import { useCity } from '../../contexts/CityContext';
+// import { useCity } from '../../contexts/CityContext';
+import { CityType } from '../../types/City';
+import Loader from '../Loader';
+
+const BASE_URL = 'http://localhost:3000/cities';
 
 /**
- * Displays information about a specific city as well as a link for further research and personal notes
+ * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.
  */
 function CityInfo() {
   const navigate = useNavigate();
-  const cityContext = useCity();
-  const matchedCity = useCityFromUrl(cityContext.cityData);
+  const [cityData, setCityData] = useState<CityType>();
+  const cityId = useParams();
 
-  if (matchedCity === undefined)
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/${cityId.id}`);
+        const data = await res.json();
+        setCityData(data);
+      } catch (error) {
+        if (error) console.error(error);
+      }
+    })();
+  }, [cityId]);
+
+  if (cityData === undefined) {
     return (
       <>
-        <h2>No Matching City</h2>
+        <Loader />
       </>
     );
+  }
 
-  const { cityName, country, emoji, date, notes } = matchedCity;
+  const { cityName, country, emoji, date, notes } = cityData;
 
   return (
     <Wrapper>
@@ -48,7 +65,7 @@ function CityInfo() {
       <WikiLinkWrapper>
         <h3>Learn More</h3>
         <a
-          href={`https://www.wikipedia.org/wiki/${matchedCity.cityName}`}
+          href={`https://www.wikipedia.org/wiki/${cityName}`}
           target='_blank'
           rel='noopener noreferrer'
         >
