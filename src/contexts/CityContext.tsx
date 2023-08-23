@@ -36,7 +36,11 @@ function CityProvider({ children }: CityProviderProps) {
     (async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities`);
+        const res = await fetch(`${BASE_URL}/cities`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
         const data: CityType[] = await res.json();
         setCityData(data);
       } catch (error) {
@@ -54,8 +58,11 @@ function CityProvider({ children }: CityProviderProps) {
   const getCity = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
-      setCurrentCity(undefined); // In order to avoid stale values when there's a delay in the HTTP Request
-      const res = await fetch(`${BASE_URL}/cities/${id}`);
+      const res = await fetch(`${BASE_URL}/cities/${id}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
       const data: CityType = await res.json();
       setCurrentCity(data);
     } catch (error) {
@@ -67,7 +74,13 @@ function CityProvider({ children }: CityProviderProps) {
 
   return (
     <CityContext.Provider
-      value={{ cityData, isLoading, currentCity, setCurrentCity, getCity }}
+      value={{
+        cityData,
+        isLoading,
+        currentCity,
+        setCurrentCity,
+        getCity,
+      }}
     >
       {children}
     </CityContext.Provider>

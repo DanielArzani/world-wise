@@ -11,15 +11,15 @@ import { useCity } from '../../contexts/CityContext';
  */
 function CityInfo() {
   const navigate = useNavigate();
-  const cityId = useParams();
+  const { id } = useParams();
   const { getCity, currentCity, isLoading } = useCity();
 
-  // FIXME: The component mounts and un-mounts very quickly and some times even after the loading spinner, the component with stale values appears for a few seconds before the data changes to match the most recent data. Strange bugs happen at various times too such as flickering between old and new data
+  // FIXME: The City information appears briefly then flickers away then the loading state appears then the city information comes back with the new city information.
   useEffect(() => {
-    if (cityId.id != null) {
-      getCity(Number(cityId.id));
+    if (id != null) {
+      getCity(Number(id));
     }
-  }, [cityId.id, getCity]);
+  }, [id, getCity]);
 
   if (!currentCity || isLoading) {
     return (
@@ -71,7 +71,7 @@ function CityInfo() {
   );
 }
 
-export default CityInfo;
+export default React.memo(CityInfo);
 
 const Wrapper = styled.div`
   display: flex;
