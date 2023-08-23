@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ProductPage from '../../pages/ProductPage';
 import PricingPage from '../../pages/PricingPage';
@@ -7,34 +7,12 @@ import NotFoundPage from '../NotFoundPage';
 import styled from 'styled-components';
 import ApplicationPage from '../../pages/ApplicationPage';
 import LoginPage from '../../pages/LoginPage';
-import { CityType } from '../../types/City';
 import VisitedCities from '../VisitedCities';
 import VisitedCountries from '../VisitedCountries';
 import CityInfo from '../CityInfo';
 import Form from '../Form';
 
-const BASE_URL = 'http://localhost:3000';
-
 function App() {
-  // TODO: Remove this fetch` and the temp data
-  const [cityData, setCityData] = useState<CityType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities`);
-        const data: CityType[] = await res.json();
-        setCityData(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, []);
-
   return (
     <Wrapper>
       <BrowserRouter>
@@ -45,23 +23,10 @@ function App() {
           <Route path='login' element={<LoginPage />} />
           <Route path='app' element={<ApplicationPage />}>
             <Route index element={<Navigate replace to='cities' />} />
-            <Route
-              path='cities'
-              element={
-                <VisitedCities cityData={cityData} isLoading={isLoading} />
-              }
-            />
-            <Route
-              path='cities/:id'
-              element={<CityInfo oneCityData={cityData} />}
-            />
+            <Route path='cities' element={<VisitedCities />} />
+            <Route path='cities/:id' element={<CityInfo />} />
 
-            <Route
-              path='countries'
-              element={
-                <VisitedCountries cityData={cityData} isLoading={isLoading} />
-              }
-            />
+            <Route path='countries' element={<VisitedCountries />} />
             <Route path='form' element={<Form />} />
           </Route>
           <Route path='*' element={<NotFoundPage />} />

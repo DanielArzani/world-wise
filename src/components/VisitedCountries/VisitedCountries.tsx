@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { CityType } from '../../types/City';
 import Loader from '../Loader';
 import { CountryType } from '../../types/CountryType';
-
-type VisitedCountriesProps = {
-  cityData: CityType[];
-  isLoading: boolean;
-};
+import { CityContext } from '../../pages/ApplicationPage';
 
 /**
  * Displays the countries that have been visited. Removes any duplicates (i.e. if a user has been to Toronto, CA and Quebec, CA then there will still only be one Canada displayed)
  * @param cityData The data of visited cities
  * @param isLoading Whether the data has loaded or not
  */
-function VisitedCountries({ cityData, isLoading }: VisitedCountriesProps) {
+function VisitedCountries() {
+  const cityContext = useContext(CityContext);
+  if (cityContext == null) {
+    return <h1>Some random jsx</h1>;
+  }
+
+  const { isLoading, cityData } = cityContext;
+
   // Derive a list of countries from the cityData
   const uniqueCountriesSet = new Set(cityData.map((city) => city.country));
-  console.log(uniqueCountriesSet);
 
   const countryData: CountryType[] = Array.from(uniqueCountriesSet).map(
     (country) => {

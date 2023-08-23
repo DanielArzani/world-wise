@@ -46,10 +46,12 @@ const findCityByLatAndLng = (
  *  }
  *}
  */
-function useCityFromUrl(cities: CityType[]): CityType | undefined {
+function useCityFromUrl(cities: CityType[] | undefined): CityType | undefined {
   const query = useQuery();
   const latString = query.get('lat');
   const lngString = query.get('lng');
+
+  if (cities == null) return;
 
   const lat = latString ? parseFloat(latString) : null;
   const lng = lngString ? parseFloat(lngString) : null;

@@ -4,18 +4,11 @@ import styled from 'styled-components';
 import logo from '../../assets/logo.png';
 import { Link, Outlet } from 'react-router-dom';
 import SidebarNavigation from '../SidebarNavigation';
-import { CityType } from '../../types/City';
-
-// TODO: Change this
-type SideBarProps = {
-  cityData?: CityType;
-};
 
 /**
  * Controls the layout for the sidebars content
- * @param cityData The data of visited cities
  */
-function Sidebar({ cityData }: SideBarProps) {
+function Sidebar() {
   return (
     <Wrapper>
       <ImageWrapper>

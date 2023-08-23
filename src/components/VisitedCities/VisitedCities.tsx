@@ -1,22 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import CloseButton from '../CloseButton';
-import { CityType } from '../../types/City';
 import formatDate from '../../utils/formateDate';
 import Loader from '../Loader';
-
-type VisitedCitiesProps = {
-  cityData: CityType[];
-  isLoading: boolean;
-};
+import { CityContext } from '../../pages/ApplicationPage';
 
 /**
  * A list of visited cities that will change the url endpoint on click
  * @param cityData The data of visited cities
  * @param isLoading Whether the data has loaded or not
  */
-function VisitedCities({ cityData, isLoading }: VisitedCitiesProps) {
+function VisitedCities() {
+  const cityContext = useContext(CityContext);
+  if (cityContext == null) {
+    return <h1>Some random jsx</h1>;
+  }
+
+  const { isLoading, cityData } = cityContext;
+
   return (
     <>
       {isLoading && (
