@@ -185,3 +185,35 @@ a {
   flex-grow: 999;
   min-inline-size: 55%;
 }
+
+/***************** 
+  LEAFLET STYLES 
+******************/
+
+/* Here we want to style classes that are coming from leaflet. So we want CSS Modules to give us the ACTUAL classNames, not to add some random ID to them, because then they won't match the classNames defined inside the map. The solution is to define these classes as GLOBAL */
+.leaflet-popup .leaflet-popup-content-wrapper {
+  background-color: var(--color-dark--1);
+  color: var(--color-light--2);
+  border-radius: 5px;
+  padding-right: 0.375rem;
+}
+
+.leaflet-popup .leaflet-popup-content {
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.leaflet-popup .leaflet-popup-content span:first-child {
+  font-size: 1.5625rem;
+  line-height: 1;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+  background-color: var(--color-dark--1);
+}
+
+.leaflet-popup-content-wrapper {
+  border-left: 5px solid var(--color-brand--2);
+}

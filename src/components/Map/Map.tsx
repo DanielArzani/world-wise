@@ -25,14 +25,14 @@ function Map() {
 
   return (
     <Wrapper
-    // onClick={(e) => {
-    //   if (
-    //     e.target instanceof Element &&
-    //     e.target.closest('#main-map-container')
-    //   ) {
-    //     navigate('form');
-    //   }
-    // }}
+      onClick={(e) => {
+        if (
+          e.target instanceof Element &&
+          e.target.closest('#main-map-container')
+        ) {
+          navigate('form');
+        }
+      }}
     >
       <MapContainer
         id='main-map-container'
@@ -52,11 +52,11 @@ function Map() {
             <Marker
               position={[city.position.lat, city.position.lng]}
               key={city.id}
-              // eventHandlers={{
-              //   click: (event) => {
-              //     event.originalEvent.stopPropagation();
-              //   },
-              // }}
+              eventHandlers={{
+                click: (event) => {
+                  event.originalEvent.stopPropagation();
+                },
+              }}
             >
               <Popup>{city.notes}</Popup>
             </Marker>
