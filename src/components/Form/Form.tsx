@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
-import { useNavigate } from 'react-router-dom';
 import BackButton from '../BackButton';
 import { useCity } from '../../contexts/CityContext';
 
