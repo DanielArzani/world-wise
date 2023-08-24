@@ -2,6 +2,8 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../BackButton';
+import { useCity } from '../../contexts/CityContext';
 
 /**
  * Convert a country code to its corresponding flag emoji.
@@ -24,7 +26,7 @@ function Form(): JSX.Element {
     new Date().toISOString().split('T')[0]
   );
   const [notes, setNotes] = useState<string>('');
-  const navigate = useNavigate();
+  const { currentCity } = useCity();
 
   /**
    * Generic handler for input changes.
@@ -47,6 +49,20 @@ function Form(): JSX.Element {
     event.preventDefault();
     // Add logic to handle form submission
   };
+
+  let position;
+  /**
+   * Handles returning to the previous url. Currently there is a problem where the number of times you click on the map is the number of times you have to click on the back button, this is to remedy that
+   */
+  const handleBackClick = () => {
+    if (currentCity !== undefined) {
+      const [lat] = [currentCity.position['lat']];
+      const [lng] = [currentCity.position['lng']];
+      const id = currentCity.id;
+      position = `/app/cities/${id}?lat=${lat}&lng=${lng}`;
+    }
+  };
+  handleBackClick();
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
@@ -86,16 +102,7 @@ function Form(): JSX.Element {
       {/* Form action buttons */}
       <ButtonWrapper>
         <Button type='primary'>Add</Button>
-        <Button
-          onClick={() => {
-            console.log('Back button has been clicked on');
-
-            navigate(-1);
-          }}
-          type='back'
-        >
-          &larr; Back
-        </Button>
+        <BackButton endpoint={position} />
       </ButtonWrapper>
     </FormWrapper>
   );

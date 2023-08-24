@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCity } from '../../contexts/CityContext';
@@ -13,8 +20,6 @@ function Map() {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   ); // When the user first logs in, the map will go to their location and a marker will be set
-
-  const navigate = useNavigate(); // A method from react-router-dom for changing the url endpoint
 
   useEffect(() => {
     // Get user's geolocation
@@ -30,12 +35,10 @@ function Map() {
         },
         (error) => {
           console.error('Error obtaining geolocation', error);
-          // Handle error, maybe set a default position or prompt the user
         }
       );
     } else {
       console.log('Geolocation is not supported by this browser.');
-      // Handle this scenario, maybe set a default position or prompt the user
     }
   }, []);
 
@@ -50,9 +53,8 @@ function Map() {
   }, [currentCity]);
 
   return (
-    <Wrapper onClick={() => navigate('form')}>
+    <Wrapper>
       <MapContainer
-        id='main-map-container'
         style={{ minHeight: '100%' }}
         center={position}
         zoom={13}
@@ -81,6 +83,7 @@ function Map() {
             <Popup>You are here</Popup>
           </Marker>
         )}
+        <DetectClick />
       </MapContainer>
     </Wrapper>
   );
@@ -103,5 +106,19 @@ function MapCenteringComponent({ center }: { center: [number, number] }) {
   useEffect(() => {
     map.setView(center);
   }, [center, map]);
+  return null;
+}
+
+/**
+ * Changes the url when the MapContainer is clicked
+ */
+function DetectClick() {
+  const navigate = useNavigate(); // A method from react-router-dom for changing the url endpoint
+
+  useMapEvents({
+    click: (e) => {
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}}`);
+    },
+  });
   return null;
 }

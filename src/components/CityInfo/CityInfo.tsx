@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../Button';
 import Loader from '../Loader';
 import { useCity } from '../../contexts/CityContext';
+import BackButton from '../BackButton';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.
@@ -88,9 +89,7 @@ function CityInfo() {
         </a>
       </WikiLinkWrapper>
 
-      <Button type='back' onClick={() => navigate(-1)}>
-        ← BACK
-      </Button>
+      <BackButton endpoint={'/app/cities'} />
     </Wrapper>
   );
 }
