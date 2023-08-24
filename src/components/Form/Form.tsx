@@ -86,7 +86,14 @@ function Form(): JSX.Element {
       {/* Form action buttons */}
       <ButtonWrapper>
         <Button type='primary'>Add</Button>
-        <Button onClick={() => navigate(-1)} type='back'>
+        <Button
+          onClick={() => {
+            console.log('Back button has been clicked on');
+
+            navigate(-1);
+          }}
+          type='back'
+        >
           &larr; Back
         </Button>
       </ButtonWrapper>
