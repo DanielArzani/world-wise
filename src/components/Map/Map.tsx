@@ -10,8 +10,34 @@ import { useCity } from '../../contexts/CityContext';
 function Map() {
   const { currentCity, cityData } = useCity();
   const [position, setPosition] = useState<[number, number]>([0, 0]);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(
+    null
+  ); // When the user first logs in, the map will go to their location and a marker will be set
 
   const navigate = useNavigate(); // A method from react-router-dom for changing the url endpoint
+
+  useEffect(() => {
+    // Get user's geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userPos: [number, number] = [
+            position.coords.latitude,
+            position.coords.longitude,
+          ];
+          setPosition(userPos);
+          setUserLocation(userPos); // set the user's location
+        },
+        (error) => {
+          console.error('Error obtaining geolocation', error);
+          // Handle error, maybe set a default position or prompt the user
+        }
+      );
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+      // Handle this scenario, maybe set a default position or prompt the user
+    }
+  }, []);
 
   useEffect(() => {
     if (currentCity !== undefined) {
@@ -24,16 +50,7 @@ function Map() {
   }, [currentCity]);
 
   return (
-    <Wrapper
-      onClick={(e) => {
-        if (
-          e.target instanceof Element &&
-          e.target.closest('#main-map-container')
-        ) {
-          navigate('form');
-        }
-      }}
-    >
+    <Wrapper onClick={() => navigate('form')}>
       <MapContainer
         id='main-map-container'
         style={{ minHeight: '100%' }}
@@ -52,16 +69,18 @@ function Map() {
             <Marker
               position={[city.position.lat, city.position.lng]}
               key={city.id}
-              eventHandlers={{
-                click: (event) => {
-                  event.originalEvent.stopPropagation();
-                },
-              }}
             >
               <Popup>{city.notes}</Popup>
             </Marker>
           );
         })}
+
+        {/* displays a marker at user location if it exists */}
+        {userLocation && (
+          <Marker position={userLocation}>
+            <Popup>You are here</Popup>
+          </Marker>
+        )}
       </MapContainer>
     </Wrapper>
   );
@@ -77,7 +96,7 @@ const Wrapper = styled.div`
  * Causes the MapContainer component from the leaflet library to re-render.
  * According to their docs:
  * { Except for its children, MapContainer props are immutable: changing them after they have been set a first time will have no effect on the Map instance or its container. }
- * @param param0
+ * @param center The position will be centered
  */
 function MapCenteringComponent({ center }: { center: [number, number] }) {
   const map = useMap();
