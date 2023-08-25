@@ -46,9 +46,9 @@ function CityInfo() {
 
   if (!currentCity || isLoading) {
     return (
-      <>
+      <LoadingSpinnerWrapper>
         <Loader />
-      </>
+      </LoadingSpinnerWrapper>
     );
   }
 
@@ -93,6 +93,12 @@ function CityInfo() {
 }
 
 export default React.memo(CityInfo);
+
+const LoadingSpinnerWrapper = styled.div`
+  transform: translate(-7%, 10rem);
+  grid-column: 2/-1;
+  grid-row: 3/4;
+`;
 
 const Wrapper = styled.div`
   display: flex;

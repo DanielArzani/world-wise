@@ -1,8 +1,14 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
 import BackButton from '../BackButton';
 import { useCity } from '../../contexts/CityContext';
+import { useUrlPosition } from '../../hooks/useUrlPosition';
+import { LocationInfoType } from '../../types/LocationType';
+import Loader from '../Loader';
+
+// https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0
+const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 
 /**
  * Convert a country code to its corresponding flag emoji.
@@ -18,14 +24,50 @@ export function convertToEmoji(countryCode: string): string {
 }
 
 function Form(): JSX.Element {
-  // State declarations for form fields
+  const [country, setCountry] = useState<string>('');
   const [cityName, setCityName] = useState<string>('');
-  // const [country, setCountry] = useState<string>('');
   const [date, setDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
   const [notes, setNotes] = useState<string>('');
   const { currentCity } = useCity();
+  const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
+  const [geocodingError, setGeocodingError] = useState<string | null>(null);
+  const clickedPosition = useUrlPosition();
+  const lat = clickedPosition?.[0];
+  const lng = clickedPosition?.[1];
+  const [emoji, setEmoji] = useState<string>('');
+
+  // fetch data about the location the user has clicked
+  useEffect(() => {
+    (async () => {
+      try {
+        setIsLoadingGeocoding(true);
+        const res = await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
+        const data: LocationInfoType = await res.json();
+
+        // if the user clicks somewhere thats not considered part of a country, show them a nice error message
+        if (!data.countryCode) {
+          throw new Error(
+            "👋 That doesn't seem to be a city. Click somewhere else 😉"
+          );
+        }
+
+        setCityName(data.city || data.locality || '');
+        setCountry(data.countryName);
+        setEmoji(convertToEmoji(data.countryCode));
+        setGeocodingError(null);
+      } catch (error) {
+        if (error instanceof Error) {
+          setGeocodingError(error.message);
+        } else {
+          setGeocodingError('An unexpected error occurred.');
+        }
+      } finally {
+        setIsLoadingGeocoding(false);
+      }
+    })();
+  }, [lat, lng]);
 
   /**
    * Generic handler for input changes.
@@ -61,53 +103,84 @@ function Form(): JSX.Element {
       position = `/app/cities/${id}?lat=${lat}&lng=${lng}`;
     }
   };
-  handleBackClick();
+  // so that this function isn't called on every render
+  if (currentCity !== undefined) handleBackClick();
+
+  // if its loading, show a spinner
+  if (isLoadingGeocoding)
+    return (
+      <LoadingSpinnerWrapper>
+        <Loader />
+      </LoadingSpinnerWrapper>
+    );
+
+  // if there's an error display it instead of the form
+  if (geocodingError != null)
+    return <ErrorMessage>{geocodingError}</ErrorMessage>;
 
   return (
-    <FormWrapper onSubmit={handleSubmit}>
-      {/* City name input */}
-      <Row>
-        <label htmlFor='cityName'>City name</label>
-        <input
-          id='cityName'
-          onChange={(e) => handleInputChange(setCityName, e)}
-          value={cityName}
-        />
-        {/* Placeholder for future flag emoji display */}
-        {/* <Flag className={styles.flag}>{emoji}</Flag> */}
-      </Row>
+    <>
+      {geocodingError == null && (
+        <FormWrapper onSubmit={handleSubmit}>
+          {/* City name input */}
+          <Row>
+            <label htmlFor='cityName'>City name</label>
+            <Input
+              id='cityName'
+              onChange={(e) => handleInputChange(setCityName, e)}
+              value={cityName}
+            />
+            {/* Placeholder for future flag emoji display */}
+            <Flag>{emoji}</Flag>
+          </Row>
 
-      {/* Date input */}
-      <Row>
-        <label htmlFor='date'>When did you go to {cityName}?</label>
-        <input
-          id='date'
-          type='date'
-          onChange={(e) => handleInputChange(setDate, e)}
-          value={date}
-        />
-      </Row>
+          {/* Date input */}
+          <Row>
+            <label htmlFor='date'>When did you go to {cityName}?</label>
+            <Input
+              id='date'
+              type='date'
+              onChange={(e) => handleInputChange(setDate, e)}
+              value={date}
+            />
+          </Row>
 
-      {/* Notes textarea */}
-      <Row>
-        <label htmlFor='notes'>Notes about your trip to {cityName}</label>
-        <textarea
-          id='notes'
-          onChange={(e) => handleInputChange(setNotes, e)}
-          value={notes}
-        />
-      </Row>
+          {/* Notes textarea */}
+          <Row>
+            <label htmlFor='notes'>Notes about your trip to {cityName}</label>
+            <TextArea
+              id='notes'
+              onChange={(e) => handleInputChange(setNotes, e)}
+              value={notes}
+            />
+          </Row>
 
-      {/* Form action buttons */}
-      <ButtonWrapper>
-        <Button type='primary'>Add</Button>
-        <BackButton endpoint={position} />
-      </ButtonWrapper>
-    </FormWrapper>
+          {/* Form action buttons */}
+          <ButtonWrapper>
+            <Button type='primary'>Add</Button>
+            <BackButton endpoint={position} />
+          </ButtonWrapper>
+        </FormWrapper>
+      )}
+    </>
   );
 }
 
 export default Form;
+
+const LoadingSpinnerWrapper = styled.div`
+  transform: translate(-7%, 10rem);
+  grid-column: 2/-1;
+  grid-row: 3/4;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1.25rem auto;
+  text-align: center;
+  width: 80%;
+`;
 
 const FormWrapper = styled.form`
   background-color: var(--color-dark--2);
@@ -137,14 +210,44 @@ const Row = styled.div`
   position: relative;
 `;
 
+const Input = styled.input`
+  background-color: var(--color-light--3);
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s;
+  width: 100%;
+
+  &:active {
+    background-color: #fff;
+  }
+`;
+
+const TextArea = styled.textarea`
+  background-color: var(--color-light--3);
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 1.5rem 0.75rem;
+  transition: all 0.2s;
+  width: 100%;
+
+  &:active {
+    background-color: #fff;
+  }
+`;
+
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-// const Flag = styled.span`
-//   position: absolute;
-//   right: 0.625rem;
-//   top: 1.6875rem;
-//   font-size: 1.75rem;
-// `;
+const Flag = styled.span`
+  position: absolute;
+  right: 0.625rem;
+  top: 1.6875rem;
+  font-size: 1.75rem;
+`;

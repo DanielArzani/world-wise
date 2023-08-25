@@ -36,7 +36,7 @@ function Map() {
     }
   }, [currentCity]);
 
-  // synchronize the geolocation position with the maps position
+  // synchronize the geolocation position with the maps position. In other words, when the user wants to move to their own position, set the maps position to what ever the geolocation api returns.
   useEffect(() => {
     if (geolocationPosition)
       setPosition([geolocationPosition.lat, geolocationPosition.lng]);
@@ -112,7 +112,7 @@ function DetectClick() {
 
   useMapEvents({
     click: (e) => {
-      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}}`);
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`);
     },
   });
   return null;
