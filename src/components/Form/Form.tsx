@@ -37,6 +37,7 @@ function Form(): JSX.Element {
   const lat = clickedPosition?.[0];
   const lng = clickedPosition?.[1];
   const [emoji, setEmoji] = useState<string>('');
+  console.log(country);
 
   // fetch data about the location the user has clicked
   useEffect(() => {
