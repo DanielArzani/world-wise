@@ -10,38 +10,22 @@ import {
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCity } from '../../contexts/CityContext';
+import useGeolocation from '../../hooks/useGeolocation';
+import Button from '../Button';
 
 /**
  * The application map, which uses react-leaflet. It will display the location on the map depending on the searchParams of lat and lng
  */
 function Map() {
   const { currentCity, cityData } = useCity();
-  const [position, setPosition] = useState<[number, number]>([0, 0]);
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(
-    null
-  ); // When the user first logs in, the map will go to their location and a marker will be set
+  const [position, setPosition] = useState<[number, number]>([40, 0]);
+  const {
+    isLoading: isLoadingPosition,
+    position: geolocationPosition,
+    getPosition,
+  } = useGeolocation();
 
-  useEffect(() => {
-    // Get user's geolocation
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userPos: [number, number] = [
-            position.coords.latitude,
-            position.coords.longitude,
-          ];
-          setPosition(userPos);
-          setUserLocation(userPos); // set the user's location
-        },
-        (error) => {
-          console.error('Error obtaining geolocation', error);
-        }
-      );
-    } else {
-      console.log('Geolocation is not supported by this browser.');
-    }
-  }, []);
-
+  // set the lat and lng which leaflet will use as its co-ordinates to the current cities lat and lng
   useEffect(() => {
     if (currentCity !== undefined) {
       const [lat] = [currentCity.position['lat']];
@@ -52,8 +36,20 @@ function Map() {
     }
   }, [currentCity]);
 
+  // synchronize the geolocation position with the maps position
+  useEffect(() => {
+    if (geolocationPosition)
+      setPosition([geolocationPosition.lat, geolocationPosition.lng]);
+  }, [geolocationPosition]);
+
   return (
     <Wrapper>
+      {!geolocationPosition && (
+        <Button type='position' onClick={getPosition}>
+          {isLoadingPosition ? 'Loading...' : 'Use your position'}
+        </Button>
+      )}
+
       <MapContainer
         style={{ minHeight: '100%' }}
         center={position}
@@ -72,14 +68,13 @@ function Map() {
               position={[city.position.lat, city.position.lng]}
               key={city.id}
             >
-              <Popup>{city.notes}</Popup>
+              <Popup>{city.notes || 'There are no notes'}</Popup>
             </Marker>
           );
         })}
-
-        {/* displays a marker at user location if it exists */}
-        {userLocation && (
-          <Marker position={userLocation}>
+        {/* Display a marker at the users current location */}
+        {geolocationPosition && (
+          <Marker position={[geolocationPosition.lat, geolocationPosition.lng]}>
             <Popup>You are here</Popup>
           </Marker>
         )}
