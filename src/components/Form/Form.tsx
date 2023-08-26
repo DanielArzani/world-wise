@@ -37,10 +37,12 @@ function Form(): JSX.Element {
   const lat = clickedPosition?.[0];
   const lng = clickedPosition?.[1];
   const [emoji, setEmoji] = useState<string>('');
-  console.log(country);
 
   // fetch data about the location the user has clicked
   useEffect(() => {
+    // if the user goes to /app/form and doesn't add the lat and lng query string then simply return else the geocoding service will default to the users location
+    if (!lat && !lng) return;
+
     (async () => {
       try {
         setIsLoadingGeocoding(true);
@@ -118,6 +120,10 @@ function Form(): JSX.Element {
   // if there's an error display it instead of the form
   if (geocodingError != null)
     return <ErrorMessage>{geocodingError}</ErrorMessage>;
+
+  // if there's somehow not lat and lng query string
+  if (!lat && !lng)
+    return <ErrorMessage>Start by clicking somewhere on the map</ErrorMessage>;
 
   return (
     <>
