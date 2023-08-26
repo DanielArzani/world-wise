@@ -4,17 +4,17 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useReducer,
 } from 'react';
 import { CityType } from '../types/City';
 
 type CityContextType = {
   cityData: CityType[];
-  setCityData: React.Dispatch<React.SetStateAction<CityType[]>>;
+  setCityData: (cities: CityType[]) => void;
   isLoading: boolean;
   currentCity: CityType | undefined;
-  setCurrentCity: React.Dispatch<React.SetStateAction<CityType | undefined>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentCity: (city?: CityType) => void;
+  setIsLoading: (loading: boolean) => void;
   getCity: (id: number) => Promise<void>;
   createCity: (newCity: CityType) => Promise<void>;
   deleteCity: (id: number) => Promise<void>;
@@ -23,6 +23,50 @@ type CityContextType = {
 const BASE_URL = 'http://localhost:3000';
 
 const CityContext = createContext<CityContextType | null>(null);
+
+type State = {
+  cityData: CityType[];
+  isLoading: boolean;
+  currentCity?: CityType;
+};
+
+const initialState: State = {
+  cityData: [],
+  isLoading: false,
+  currentCity: undefined,
+};
+
+type Action =
+  | { type: 'SET_CITIES'; payload: CityType[] }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_CURRENT_CITY'; payload: CityType | undefined }
+  | { type: 'ADD_CITY'; payload: CityType }
+  | { type: 'DELETE_CITY'; payload: number };
+
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.payload };
+
+    case 'SET_CITIES':
+      return { ...state, cityData: action.payload };
+
+    case 'SET_CURRENT_CITY':
+      return { ...state, currentCity: action.payload };
+
+    case 'ADD_CITY':
+      return { ...state, cityData: [...state.cityData, action.payload] };
+
+    case 'DELETE_CITY':
+      return {
+        ...state,
+        cityData: state.cityData.filter((city) => city.id !== action.payload),
+      };
+
+    default:
+      return state;
+  }
+}
 
 type CityProviderProps = {
   children: React.ReactNode;
@@ -33,25 +77,23 @@ type CityProviderProps = {
  * @param children The components that should be able to use this data
  */
 function CityProvider({ children }: CityProviderProps) {
-  const [cityData, setCityData] = useState<CityType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentCity, setCurrentCity] = useState<CityType | undefined>();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     (async () => {
       try {
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         const res = await fetch(`${BASE_URL}/cities`, {
           headers: {
             'Cache-Control': 'no-cache',
           },
         });
         const data: CityType[] = await res.json();
-        setCityData(data);
+        dispatch({ type: 'SET_CITIES', payload: data });
       } catch (error) {
         console.error(error);
       } finally {
-        setIsLoading(false);
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     })();
   }, []);
@@ -62,7 +104,7 @@ function CityProvider({ children }: CityProviderProps) {
    */
   const getCity = useCallback(async (id: number) => {
     try {
-      setIsLoading(true);
+      dispatch({ type: 'SET_LOADING', payload: true });
 
       const res = await fetch(`${BASE_URL}/cities/${id}`, {
         headers: {
@@ -70,11 +112,11 @@ function CityProvider({ children }: CityProviderProps) {
         },
       });
       const data: CityType = await res.json();
-      setCurrentCity(data);
+      dispatch({ type: 'SET_CURRENT_CITY', payload: data });
     } catch (error) {
       if (error) console.error(error);
     } finally {
-      setIsLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   }, []);
 
@@ -85,7 +127,7 @@ function CityProvider({ children }: CityProviderProps) {
   const createCity = useCallback(
     async (newCity: CityType) => {
       try {
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
 
         const res = await fetch(`${BASE_URL}/cities`, {
           headers: {
@@ -96,15 +138,15 @@ function CityProvider({ children }: CityProviderProps) {
           body: JSON.stringify(newCity),
         });
         const data: CityType = await res.json();
-        setCityData([...cityData, data]);
-        setCurrentCity(data);
+        dispatch({ type: 'SET_CITIES', payload: [...state.cityData, data] });
+        dispatch({ type: 'SET_CURRENT_CITY', payload: data });
       } catch (error) {
         if (error) console.error(error);
       } finally {
-        setIsLoading(false);
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [cityData]
+    [state.cityData]
   );
 
   /**
@@ -114,7 +156,7 @@ function CityProvider({ children }: CityProviderProps) {
   const deleteCity = useCallback(
     async (id: number) => {
       try {
-        setIsLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
 
         // Make a DELETE request to delete the city on the backend
         const res = await fetch(`${BASE_URL}/cities/${id}`, {
@@ -126,14 +168,11 @@ function CityProvider({ children }: CityProviderProps) {
 
         // Check if the request was successful
         if (res.status === 200) {
-          // Filter out the deleted city from cityData and set the state
-          setCityData((prevCityData) =>
-            prevCityData.filter((city) => city.id !== id)
-          );
+          dispatch({ type: 'DELETE_CITY', payload: id });
 
           // If the currentCity is the deleted one, reset currentCity
-          if (currentCity?.id === id) {
-            setCurrentCity(undefined);
+          if (state.currentCity?.id === id) {
+            dispatch({ type: 'SET_CURRENT_CITY', payload: undefined });
           }
         } else {
           console.error('Failed to delete city. Status:', res.status);
@@ -141,26 +180,29 @@ function CityProvider({ children }: CityProviderProps) {
       } catch (error) {
         console.error(error);
       } finally {
-        setIsLoading(false);
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
-    [currentCity, setCityData, setIsLoading]
+    [state.currentCity]
   );
 
   // FIXME: React is creating a new object because its deeming that whats being passed in here isn't passing its equality check
   const value = useMemo(
     () => ({
-      cityData,
-      isLoading,
-      currentCity,
-      setCurrentCity,
-      setIsLoading,
+      cityData: state.cityData,
+      isLoading: state.isLoading,
+      currentCity: state.currentCity,
+      setCurrentCity: (city?: CityType) =>
+        dispatch({ type: 'SET_CURRENT_CITY', payload: city }),
+      setIsLoading: (loading: boolean) =>
+        dispatch({ type: 'SET_LOADING', payload: loading }),
       getCity,
-      setCityData,
+      setCityData: (cities: CityType[]) =>
+        dispatch({ type: 'SET_CITIES', payload: cities }),
       createCity,
       deleteCity,
     }),
-    [cityData, isLoading, currentCity, getCity, createCity, deleteCity]
+    [state, getCity, createCity, deleteCity]
   );
 
   return <CityContext.Provider value={value}>{children}</CityContext.Provider>;
@@ -171,6 +213,7 @@ function CityProvider({ children }: CityProviderProps) {
  * - cityData: An array of cities (CityType[]).
  * - setCityData: The setter function for the cityData
  * - isLoading: A boolean indicating whether the data is loading.
+ * - setIsLoading: Setter function for isLoading
  * - currentCity: The currently selected city
  * - setCurrentCity: A setter function for the currentCity.
  * - getCity: Function that will get a city based on the id
