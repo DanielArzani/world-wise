@@ -10,6 +10,7 @@ import { CityType } from '../types/City';
 
 type CityContextType = {
   cityData: CityType[];
+  setCityData: React.Dispatch<React.SetStateAction<CityType[]>>;
   isLoading: boolean;
   currentCity: CityType | undefined;
   setCurrentCity: React.Dispatch<React.SetStateAction<CityType | undefined>>;
@@ -82,6 +83,7 @@ function CityProvider({ children }: CityProviderProps) {
       setCurrentCity,
       setIsLoading,
       getCity,
+      setCityData,
     }),
     [cityData, isLoading, currentCity, getCity]
   );

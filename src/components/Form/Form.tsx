@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+} from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
 import BackButton from '../BackButton';
@@ -9,6 +15,8 @@ import Loader from '../Loader';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import generateRandomNumber from '../../utils/generateRandomNumber';
+import { CityType } from '../../types/City';
 
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0
 const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
@@ -33,7 +41,7 @@ function Form(): JSX.Element {
     new Date().toISOString().split('T')[0]
   );
   const [notes, setNotes] = useState<string>('');
-  const { currentCity } = useCity();
+  const { currentCity, setCurrentCity, cityData, setCityData } = useCity();
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
   const [geocodingError, setGeocodingError] = useState<string | null>(null);
   const clickedPosition = useUrlPosition();
@@ -94,23 +102,37 @@ function Form(): JSX.Element {
    */
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Add logic to handle form submission
+
+    if (lat === undefined || lng === undefined) {
+      console.error('Latitude or Longitude is undefined.');
+      return;
+    }
+
+    const newCityObject: CityType = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: {
+        lat,
+        lng,
+      },
+      id: generateRandomNumber(),
+    };
+
+    setCityData([...cityData, newCityObject]);
+    setCurrentCity(newCityObject);
   };
 
-  let position;
-  /**
-   * Handles returning to the previous url. Currently there is a problem where the number of times you click on the map is the number of times you have to click on the back button, this is to remedy that
-   */
-  const handleBackClick = () => {
+  const position = useMemo(() => {
     if (currentCity !== undefined) {
-      const [lat] = [currentCity.position['lat']];
-      const [lng] = [currentCity.position['lng']];
+      const lat = currentCity.position['lat'];
+      const lng = currentCity.position['lng'];
       const id = currentCity.id;
-      position = `/app/cities/${id}?lat=${lat}&lng=${lng}`;
+      return `/app/cities/${id}?lat=${lat}&lng=${lng}`;
     }
-  };
-  // so that this function isn't called on every render
-  if (currentCity !== undefined) handleBackClick();
+  }, [currentCity]);
 
   // if its loading, show a spinner
   if (isLoadingGeocoding)
@@ -157,6 +179,13 @@ function Form(): JSX.Element {
               dateFormat='yyyy-MM-dd'
               customInput={<CustomDatePickerInput />}
             />
+            {/* <DatePicker
+              onChange={(date) => {
+                if(date != null) setDate(date)
+              }}
+              selected={date}
+              customInput={<CustomDatePickerInput />}
+            /> */}
           </Row>
 
           {/* Notes textarea */}

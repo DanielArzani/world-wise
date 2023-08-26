@@ -27,9 +27,9 @@ function Map() {
 
   // set the lat and lng which leaflet will use as its co-ordinates to the current cities lat and lng
   useEffect(() => {
-    if (currentCity !== undefined) {
-      const [lat] = [currentCity.position['lat']];
-      const [lng] = [currentCity.position['lng']];
+    if (currentCity && currentCity.position) {
+      const lat = currentCity.position.lat;
+      const lng = currentCity.position.lng;
 
       const mapPosition: [number, number] = [lat, lng];
       setPosition(mapPosition);
