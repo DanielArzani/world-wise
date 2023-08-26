@@ -12,6 +12,7 @@ import NotesInput from '../NotesInput';
 import CityInput from '../CityInput';
 import DateInput from '../DateInput';
 import { useGeocoding } from '../../hooks/useGeocoding';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Form component for adding details about a selected city.
@@ -33,7 +34,8 @@ function Form(): JSX.Element {
   const [cityName, setCityName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
 
-  const { currentCity, setCurrentCity, cityData, setCityData } = useCity();
+  const { isLoading, setCurrentCity, cityData, setCityData, createCity } =
+    useCity();
   const [notes, setNotes] = useState<string>('');
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
   const [geocodingError, setGeocodingError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ function Form(): JSX.Element {
   const lat = clickedPosition?.[0];
   const lng = clickedPosition?.[1];
   const [emoji, setEmoji] = useState<string>('');
+  const navigate = useNavigate();
 
   useGeocoding(
     lat,
@@ -69,13 +72,15 @@ function Form(): JSX.Element {
    * Handle form submission.
    * @param {FormEvent<HTMLFormElement>} event - The form event object.
    */
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (lat === undefined || lng === undefined) {
       console.error('Latitude or Longitude is undefined.');
       return;
     }
+
+    if (!cityName || !date) return;
 
     const newCityObject: CityType = {
       cityName,
@@ -90,20 +95,11 @@ function Form(): JSX.Element {
       id: generateRandomNumber(),
     };
 
+    await createCity(newCityObject);
+    navigate('/app/cities');
     setCityData([...cityData, newCityObject]);
-    console.log('CITY...', cityData);
-
     setCurrentCity(newCityObject);
   };
-
-  const position = useMemo(() => {
-    if (currentCity !== undefined) {
-      const lat = currentCity.position['lat'];
-      const lng = currentCity.position['lng'];
-      const id = currentCity.id;
-      return `/app/cities/${id}?lat=${lat}&lng=${lng}`;
-    }
-  }, [currentCity]);
 
   // if its loading, show a spinner
   if (isLoadingGeocoding)
@@ -124,7 +120,10 @@ function Form(): JSX.Element {
   return (
     <>
       {geocodingError == null && (
-        <FormWrapper onSubmit={handleSubmit}>
+        <FormWrapper
+          onSubmit={handleSubmit}
+          style={isLoading ? { opacity: 0.3 } : {}}
+        >
           <CityInput
             value={cityName}
             emoji={emoji}

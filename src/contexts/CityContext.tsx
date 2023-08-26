@@ -16,6 +16,7 @@ type CityContextType = {
   setCurrentCity: React.Dispatch<React.SetStateAction<CityType | undefined>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   getCity: (id: number) => Promise<void>;
+  createCity: (newCity: CityType) => Promise<void>;
 };
 
 const BASE_URL = 'http://localhost:3000';
@@ -75,6 +76,33 @@ function CityProvider({ children }: CityProviderProps) {
       setIsLoading(false);
     }
   }, []);
+
+  /**
+   * Creates a new city
+   * @param newCity An object that contains the required data of a city
+   */
+  const createCity = useCallback(async (newCity: CityType) => {
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(`${BASE_URL}/cities`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(newCity),
+      });
+      const data: CityType = await res.json();
+
+      console.log(data);
+    } catch (error) {
+      if (error) console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // FIXME: React is creating a new object because its deeming that whats being passed in here isn't passing its equality check
   const value = useMemo(
     () => ({
@@ -85,6 +113,7 @@ function CityProvider({ children }: CityProviderProps) {
       setIsLoading,
       getCity,
       setCityData,
+      createCity,
     }),
     [cityData, isLoading, currentCity, getCity]
   );

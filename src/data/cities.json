@@ -1,3 +1,76 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2023-08-26T14:47:26.634Z",
+      "notes": "",
+      "position": {
+        "lat": 40.004212850519885,
+        "lng": -0.00879437719935261
+      },
+      "id": 68042914
+    },
+    {
+      "cityName": "Richmond Hill",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2023-08-26T14:48:49.331Z",
+      "notes": "sfsafasf",
+      "position": {
+        "lat": 43.88502670347004,
+        "lng": -79.43136106442039
+      },
+      "id": 31723937
+    },
+    {
+      "cityName": "King",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2023-08-26T14:54:24.163Z",
+      "notes": "",
+      "position": {
+        "lat": 43.98095752608484,
+        "lng": -79.5322258260061
+      },
+      "id": 33479516
+    },
+    {
+      "cityName": "Balearic Sea",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2023-08-26T14:56:16.073Z",
+      "notes": "",
+      "position": {
+        "lat": 39.813810568514526,
+        "lng": 0.0957954511951753
+      },
+      "id": 85553644
+    },
+    {
+      "cityName": "Scugog",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2023-08-26T14:57:35.191Z",
+      "notes": "",
+      "position": {
+        "lat": 44.07772017126641,
+        "lng": -78.7459392739551
+      },
+      "id": 17239232
+    },
+    {
+      "cityName": "Ribarroja del Turia",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2023-08-26T14:58:44.683Z",
+      "notes": "",
+      "position": {
+        "lat": 39.54958871848278,
+        "lng": -0.5758488413739206
+      },
+      "id": 22869143
+    }
+  ]
 }
