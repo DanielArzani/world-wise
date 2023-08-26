@@ -28,12 +28,14 @@ type State = {
   cityData: CityType[];
   isLoading: boolean;
   currentCity?: CityType;
+  error: string | null;
 };
 
 const initialState: State = {
   cityData: [],
   isLoading: false,
   currentCity: undefined,
+  error: null,
 };
 
 type Action =
@@ -41,7 +43,9 @@ type Action =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_CURRENT_CITY'; payload: CityType | undefined }
   | { type: 'ADD_CITY'; payload: CityType }
-  | { type: 'DELETE_CITY'; payload: number };
+  | { type: 'DELETE_CITY'; payload: number }
+  | { type: 'ERROR'; payload: string }
+  | { type: 'CLEAR_ERROR' };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
@@ -62,6 +66,12 @@ function reducer(state: State, action: Action) {
         ...state,
         cityData: state.cityData.filter((city) => city.id !== action.payload),
       };
+
+    case 'ERROR':
+      return { ...state, error: action.payload };
+
+    case 'CLEAR_ERROR':
+      return { ...state, error: null };
 
     default:
       return state;
@@ -91,7 +101,10 @@ function CityProvider({ children }: CityProviderProps) {
         const data: CityType[] = await res.json();
         dispatch({ type: 'SET_CITIES', payload: data });
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          console.error(error);
+          dispatch({ type: 'ERROR', payload: error.message });
+        }
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
@@ -114,7 +127,10 @@ function CityProvider({ children }: CityProviderProps) {
       const data: CityType = await res.json();
       dispatch({ type: 'SET_CURRENT_CITY', payload: data });
     } catch (error) {
-      if (error) console.error(error);
+      if (error instanceof Error) {
+        console.error(error);
+        dispatch({ type: 'ERROR', payload: error.message });
+      }
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
@@ -141,7 +157,10 @@ function CityProvider({ children }: CityProviderProps) {
         dispatch({ type: 'SET_CITIES', payload: [...state.cityData, data] });
         dispatch({ type: 'SET_CURRENT_CITY', payload: data });
       } catch (error) {
-        if (error) console.error(error);
+        if (error instanceof Error) {
+          console.error(error);
+          dispatch({ type: 'ERROR', payload: error.message });
+        }
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
@@ -178,13 +197,21 @@ function CityProvider({ children }: CityProviderProps) {
           console.error('Failed to delete city. Status:', res.status);
         }
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          console.error(error);
+          dispatch({ type: 'ERROR', payload: error.message });
+        }
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
     [state.currentCity]
   );
+
+  // clears the error from the state when called
+  const clearError = () => {
+    dispatch({ type: 'CLEAR_ERROR' });
+  };
 
   // FIXME: React is creating a new object because its deeming that whats being passed in here isn't passing its equality check
   const value = useMemo(
@@ -201,6 +228,8 @@ function CityProvider({ children }: CityProviderProps) {
         dispatch({ type: 'SET_CITIES', payload: cities }),
       createCity,
       deleteCity,
+      error: state.error,
+      clearError,
     }),
     [state, getCity, createCity, deleteCity]
   );
@@ -211,14 +240,16 @@ function CityProvider({ children }: CityProviderProps) {
 /**
  * Provides access to the CityContext. When called, this hook returns:
  * - cityData: An array of cities (CityType[]).
- * - setCityData: The setter function for the cityData
+ * - setCityData: The setter function for the cityData.
  * - isLoading: A boolean indicating whether the data is loading.
- * - setIsLoading: Setter function for isLoading
- * - currentCity: The currently selected city
+ * - setIsLoading: Setter function for isLoading.
+ * - currentCity: The currently selected city.
  * - setCurrentCity: A setter function for the currentCity.
- * - getCity: Function that will get a city based on the id
- * - createCity: A function will create a new city and add it to the json file of cities
- * - deleteCity: Deletes a city
+ * - getCity: Function that fetches a city based on the id.
+ * - createCity: A function that creates a new city and adds it to the list of cities.
+ * - deleteCity: Function that deletes a city based on its id.
+ * - error: The error state showing any errors that occurred.
+ * - clearError: Function to clear any errors.
  */
 function useCity() {
   const context = useContext(CityContext);
