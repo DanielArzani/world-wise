@@ -4,133 +4,49 @@
       "cityName": "Castello de la Plana",
       "country": "Spain",
       "emoji": "🇪🇸",
-      "date": "2023-08-26T14:47:26.634Z",
+      "date": "2023-08-26T15:13:41.114Z",
       "notes": "",
       "position": {
-        "lat": 40.004212850519885,
-        "lng": -0.00879437719935261
+        "lat": 40.01407404800529,
+        "lng": -0.016695051729975766
       },
-      "id": 68042914
+      "id": 67757216
     },
     {
-      "cityName": "Richmond Hill",
-      "country": "Canada",
-      "emoji": "🇨🇦",
-      "date": "2023-08-26T14:48:49.331Z",
-      "notes": "sfsafasf",
-      "position": {
-        "lat": 43.88502670347004,
-        "lng": -79.43136106442039
-      },
-      "id": 31723937
-    },
-    {
-      "cityName": "King",
-      "country": "Canada",
-      "emoji": "🇨🇦",
-      "date": "2023-08-26T14:54:24.163Z",
-      "notes": "",
-      "position": {
-        "lat": 43.98095752608484,
-        "lng": -79.5322258260061
-      },
-      "id": 33479516
-    },
-    {
-      "cityName": "Balearic Sea",
+      "cityName": "Muriel de la Fuente",
       "country": "Spain",
       "emoji": "🇪🇸",
-      "date": "2023-08-26T14:56:16.073Z",
+      "date": "2023-08-26T15:15:21.978Z",
       "notes": "",
       "position": {
-        "lat": 39.813810568514526,
-        "lng": 0.0957954511951753
+        "lat": 41.724180549563606,
+        "lng": -2.8625181171816827
       },
-      "id": 85553644
+      "id": 54469477
     },
     {
-      "cityName": "Scugog",
-      "country": "Canada",
-      "emoji": "🇨🇦",
-      "date": "2023-08-26T14:57:35.191Z",
+      "cityName": "Kenmare",
+      "country": "Ireland",
+      "emoji": "🇮🇪",
+      "date": "2023-08-26T15:15:35.211Z",
       "notes": "",
       "position": {
-        "lat": 44.07772017126641,
-        "lng": -78.7459392739551
+        "lat": 51.90361280788357,
+        "lng": -9.31889633878237
       },
-      "id": 17239232
+      "id": 89314943
     },
     {
-      "cityName": "Ribarroja del Turia",
+      "cityName": "Caspe",
       "country": "Spain",
       "emoji": "🇪🇸",
-      "date": "2023-08-26T14:58:44.683Z",
+      "date": "2023-08-26T15:16:10.410Z",
       "notes": "",
       "position": {
-        "lat": 39.54958871848278,
-        "lng": -0.5758488413739206
+        "lat": 41.353103016469014,
+        "lng": 0.028401423513653164
       },
-      "id": 22869143
-    },
-    {
-      "cityName": "Beniatjar",
-      "country": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2023-08-26T15:01:12.366Z",
-      "notes": "",
-      "position": {
-        "lat": 38.83542884007305,
-        "lng": -0.4209175920290931
-      },
-      "id": 39778589
-    },
-    {
-      "cityName": "Villar de Olalla",
-      "country": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2023-08-26T15:01:34.550Z",
-      "notes": "",
-      "position": {
-        "lat": 39.95501708352989,
-        "lng": -2.260788936380403
-      },
-      "id": 90088220
-    },
-    {
-      "cityName": "Tavira",
-      "country": "Portugal",
-      "emoji": "🇵🇹",
-      "date": "2023-08-26T15:01:49.214Z",
-      "notes": "",
-      "position": {
-        "lat": 37.2210522115469,
-        "lng": -7.796384944339939
-      },
-      "id": 24138036
-    },
-    {
-      "cityName": "Lousame",
-      "country": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2023-08-26T15:01:57.780Z",
-      "notes": "",
-      "position": {
-        "lat": 42.83166720261409,
-        "lng": -8.795691286500068
-      },
-      "id": 10764296
-    },
-    {
-      "cityName": "Tiny",
-      "country": "Canada",
-      "emoji": "🇨🇦",
-      "date": "2023-08-26T15:03:28.579Z",
-      "notes": "",
-      "position": {
-        "lat": 44.61190999095177,
-        "lng": -80.1167816605712
-      },
-      "id": 82293432
+      "id": 26632893
     }
   ]
 }

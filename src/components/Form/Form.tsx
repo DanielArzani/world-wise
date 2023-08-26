@@ -34,8 +34,7 @@ function Form(): JSX.Element {
   const [cityName, setCityName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
 
-  const { isLoading, setCurrentCity, cityData, setCityData, createCity } =
-    useCity();
+  const { isLoading, createCity } = useCity();
   const [notes, setNotes] = useState<string>('');
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
   const [geocodingError, setGeocodingError] = useState<string | null>(null);
@@ -96,9 +95,7 @@ function Form(): JSX.Element {
     };
 
     await createCity(newCityObject);
-    navigate('/app/cities');
-    setCityData([...cityData, newCityObject]);
-    setCurrentCity(newCityObject);
+    navigate('/app/cities'); // move to the cities url have the new city has been created instead of staying at the form url
   };
 
   // if its loading, show a spinner
