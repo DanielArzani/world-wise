@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 type CloseButtonProps = {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
 };
 
 /**

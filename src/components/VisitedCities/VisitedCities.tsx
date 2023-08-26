@@ -103,12 +103,18 @@ function CityListItem({
   flag,
   id,
 }: CityListItemProps) {
-  const { currentCity } = useCity();
+  const { currentCity, deleteCity } = useCity();
 
   let cityId;
   if (currentCity !== undefined) {
     cityId = currentCity.id;
   }
+
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.preventDefault(); // Prevent the default behavior (navigation)
+    event.stopPropagation(); // Prevent the event from bubbling up to NavLink
+    deleteCity(id);
+  };
 
   // FIXME: Fix the styles on cityItem--active
   return (
@@ -127,7 +133,7 @@ function CityListItem({
 
         <ChildWrapper>
           <Time dateTime={dateVisited}>{formatDate(dateVisited)}</Time>
-          <CloseButton />
+          <CloseButton onClick={(event) => handleDeleteClick(event)} />
         </ChildWrapper>
       </NavLink>
     </Li>
