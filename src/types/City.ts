@@ -2,7 +2,7 @@ export type CityType = {
   cityName: string;
   country: string;
   emoji: string;
-  date: string;
+  date: Date;
   notes: string;
   position: {
     lat: number;

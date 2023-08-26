@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 
 type DateInputProps = {
-  date: string;
+  date: Date;
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
   onChange: (selectedDate: Date) => void;
 };
 
@@ -11,17 +12,21 @@ type DateInputProps = {
  * This component provides a date picker for users to select or view the date of their trip.
  *
  * @param date Selected or displayed date.
+ * @param setDate The setter function for the date
  * @param onChange Handler to manage date changes.
  */
-const DateInput = ({ date, onChange }: DateInputProps) => {
+const DateInput = ({ date, setDate, onChange }: DateInputProps) => {
   return (
     <Row>
       <label htmlFor='date'>When did you go?</label>
       <DatePicker
-        selected={new Date(date)}
-        onChange={onChange}
-        dateFormat='yyyy-MM-dd'
-        customInput={<CustomDatePickerInput />}
+        selected={date}
+        onChange={(selectedDate) => {
+          if (selectedDate) {
+            setDate(selectedDate);
+          }
+        }}
+        dateFormat='dd/MM/yyyy'
       />
     </Row>
   );

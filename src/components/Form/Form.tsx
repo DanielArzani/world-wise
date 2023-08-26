@@ -31,9 +31,8 @@ import { useGeocoding } from '../../hooks/useGeocoding';
 function Form(): JSX.Element {
   const [country, setCountry] = useState<string>('');
   const [cityName, setCityName] = useState<string>('');
-  const [date, setDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  );
+  const [date, setDate] = useState<Date>(new Date());
+
   const [notes, setNotes] = useState<string>('');
   const { currentCity, setCurrentCity, cityData, setCityData } = useCity();
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
@@ -131,9 +130,10 @@ function Form(): JSX.Element {
           />
           <DateInput
             date={date}
+            setDate={setDate}
             onChange={(selectedDate) => {
               if (selectedDate) {
-                setDate(selectedDate.toISOString().split('T')[0]);
+                setDate(selectedDate);
               }
             }}
           />
