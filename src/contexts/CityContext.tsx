@@ -39,38 +39,45 @@ const initialState: State = {
 };
 
 type Action =
-  | { type: 'SET_CITIES'; payload: CityType[] }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_CURRENT_CITY'; payload: CityType | undefined }
-  | { type: 'ADD_CITY'; payload: CityType }
-  | { type: 'DELETE_CITY'; payload: number }
-  | { type: 'ERROR'; payload: string }
-  | { type: 'CLEAR_ERROR' };
+  | { type: 'loading'; payload: boolean }
+  | { type: 'cities/loaded'; payload: CityType[] }
+  | { type: 'city/loaded'; payload: CityType | undefined }
+  | { type: 'city/created'; payload: CityType }
+  | { type: 'city/deleted'; payload: number }
+  | { type: 'rejected'; payload: string }
+  | { type: 'clear_rejected' };
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
-    case 'SET_LOADING':
-      return { ...state, isLoading: action.payload };
+    case 'loading':
+      return { ...state, isLoading: true };
 
-    case 'SET_CITIES':
-      return { ...state, cityData: action.payload };
+    case 'cities/loaded':
+      return { ...state, cityData: action.payload, isLoading: false };
 
-    case 'SET_CURRENT_CITY':
-      return { ...state, currentCity: action.payload };
+    case 'city/loaded':
+      return { ...state, currentCity: action.payload, isLoading: false };
 
-    case 'ADD_CITY':
-      return { ...state, cityData: [...state.cityData, action.payload] };
+    case 'city/created':
+      return {
+        ...state,
+        cityData: [...state.cityData, action.payload],
+        isLoading: false,
+        currentCity: action.payload,
+      };
 
-    case 'DELETE_CITY':
+    case 'city/deleted':
       return {
         ...state,
         cityData: state.cityData.filter((city) => city.id !== action.payload),
+        isLoading: false,
+        currentCity: undefined,
       };
 
-    case 'ERROR':
-      return { ...state, error: action.payload };
+    case 'rejected':
+      return { ...state, error: action.payload, isLoading: false };
 
-    case 'CLEAR_ERROR':
+    case 'clear_rejected':
       return { ...state, error: null };
 
     default:
@@ -92,21 +99,19 @@ function CityProvider({ children }: CityProviderProps) {
   useEffect(() => {
     (async () => {
       try {
-        dispatch({ type: 'SET_LOADING', payload: true });
+        dispatch({ type: 'loading', payload: true });
         const res = await fetch(`${BASE_URL}/cities`, {
           headers: {
             'Cache-Control': 'no-cache',
           },
         });
         const data: CityType[] = await res.json();
-        dispatch({ type: 'SET_CITIES', payload: data });
+        dispatch({ type: 'cities/loaded', payload: data });
       } catch (error) {
         if (error instanceof Error) {
           console.error(error);
-          dispatch({ type: 'ERROR', payload: error.message });
+          dispatch({ type: 'rejected', payload: error.message });
         }
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
       }
     })();
   }, []);
@@ -117,22 +122,19 @@ function CityProvider({ children }: CityProviderProps) {
    */
   const getCity = useCallback(async (id: number) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-
+      dispatch({ type: 'loading', payload: true });
       const res = await fetch(`${BASE_URL}/cities/${id}`, {
         headers: {
           'Cache-Control': 'no-cache',
         },
       });
       const data: CityType = await res.json();
-      dispatch({ type: 'SET_CURRENT_CITY', payload: data });
+      dispatch({ type: 'city/loaded', payload: data });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
-        dispatch({ type: 'ERROR', payload: error.message });
+        dispatch({ type: 'rejected', payload: error.message });
       }
-    } finally {
-      dispatch({ type: 'SET_LOADING', payload: false });
     }
   }, []);
 
@@ -143,8 +145,7 @@ function CityProvider({ children }: CityProviderProps) {
   const createCity = useCallback(
     async (newCity: CityType) => {
       try {
-        dispatch({ type: 'SET_LOADING', payload: true });
-
+        dispatch({ type: 'loading', payload: true });
         const res = await fetch(`${BASE_URL}/cities`, {
           headers: {
             'Cache-Control': 'no-cache',
@@ -154,15 +155,13 @@ function CityProvider({ children }: CityProviderProps) {
           body: JSON.stringify(newCity),
         });
         const data: CityType = await res.json();
-        dispatch({ type: 'SET_CITIES', payload: [...state.cityData, data] });
-        dispatch({ type: 'SET_CURRENT_CITY', payload: data });
+        dispatch({ type: 'cities/loaded', payload: [...state.cityData, data] });
+        dispatch({ type: 'city/loaded', payload: data });
       } catch (error) {
         if (error instanceof Error) {
           console.error(error);
-          dispatch({ type: 'ERROR', payload: error.message });
+          dispatch({ type: 'rejected', payload: error.message });
         }
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
     [state.cityData]
@@ -175,8 +174,7 @@ function CityProvider({ children }: CityProviderProps) {
   const deleteCity = useCallback(
     async (id: number) => {
       try {
-        dispatch({ type: 'SET_LOADING', payload: true });
-
+        dispatch({ type: 'loading', payload: true });
         // Make a DELETE request to delete the city on the backend
         const res = await fetch(`${BASE_URL}/cities/${id}`, {
           headers: {
@@ -187,11 +185,11 @@ function CityProvider({ children }: CityProviderProps) {
 
         // Check if the request was successful
         if (res.status === 200) {
-          dispatch({ type: 'DELETE_CITY', payload: id });
+          dispatch({ type: 'city/deleted', payload: id });
 
           // If the currentCity is the deleted one, reset currentCity
           if (state.currentCity?.id === id) {
-            dispatch({ type: 'SET_CURRENT_CITY', payload: undefined });
+            dispatch({ type: 'city/loaded', payload: undefined });
           }
         } else {
           console.error('Failed to delete city. Status:', res.status);
@@ -199,10 +197,8 @@ function CityProvider({ children }: CityProviderProps) {
       } catch (error) {
         if (error instanceof Error) {
           console.error(error);
-          dispatch({ type: 'ERROR', payload: error.message });
+          dispatch({ type: 'rejected', payload: error.message });
         }
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
       }
     },
     [state.currentCity]
@@ -210,7 +206,7 @@ function CityProvider({ children }: CityProviderProps) {
 
   // clears the error from the state when called
   const clearError = () => {
-    dispatch({ type: 'CLEAR_ERROR' });
+    dispatch({ type: 'clear_rejected' });
   };
 
   // FIXME: React is creating a new object because its deeming that whats being passed in here isn't passing its equality check
@@ -220,12 +216,12 @@ function CityProvider({ children }: CityProviderProps) {
       isLoading: state.isLoading,
       currentCity: state.currentCity,
       setCurrentCity: (city?: CityType) =>
-        dispatch({ type: 'SET_CURRENT_CITY', payload: city }),
+        dispatch({ type: 'city/loaded', payload: city }),
       setIsLoading: (loading: boolean) =>
-        dispatch({ type: 'SET_LOADING', payload: loading }),
+        dispatch({ type: 'loading', payload: loading }),
       getCity,
       setCityData: (cities: CityType[]) =>
-        dispatch({ type: 'SET_CITIES', payload: cities }),
+        dispatch({ type: 'cities/loaded', payload: cities }),
       createCity,
       deleteCity,
       error: state.error,

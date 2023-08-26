@@ -1,3 +1,28 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "cityName": "Caravaca de la Cruz",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2023-08-26T16:48:07.102Z",
+      "notes": "",
+      "position": {
+        "lat": 37.87485339352928,
+        "lng": -2.0143011991008257
+      },
+      "id": 47686883
+    },
+    {
+      "cityName": "Vaughan",
+      "country": "Canada",
+      "emoji": "🇨🇦",
+      "date": "2023-08-26T16:48:27.869Z",
+      "notes": "",
+      "position": {
+        "lat": 43.84245116699039,
+        "lng": -79.6312484712775
+      },
+      "id": 49355090
+    }
+  ]
 }
