@@ -121,6 +121,9 @@ function CityProvider({ children }: CityProviderProps) {
    * @param id The id of a specific city
    */
   const getCity = useCallback(async (id: number) => {
+    // there's no need to call the api again if the id is already that of the currentCity
+    if (Number(id) === state.currentCity?.id) return;
+
     try {
       dispatch({ type: 'loading', payload: true });
       const res = await fetch(`${BASE_URL}/cities/${id}`, {
