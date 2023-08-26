@@ -1,39 +1,33 @@
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { useState, ChangeEvent, FormEvent, useMemo } from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
 import BackButton from '../BackButton';
 import { useCity } from '../../contexts/CityContext';
 import { useUrlPosition } from '../../hooks/useUrlPosition';
-import { LocationInfoType } from '../../types/LocationType';
 import Loader from '../Loader';
 
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import generateRandomNumber from '../../utils/generateRandomNumber';
 import { CityType } from '../../types/City';
-
-// https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0
-const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
+import NotesInput from '../NotesInput';
+import CityInput from '../CityInput';
+import DateInput from '../DateInput';
+import { useGeocoding } from '../../hooks/useGeocoding';
 
 /**
- * Convert a country code to its corresponding flag emoji.
- * @param {string} countryCode - The country code (e.g., "US" for United States).
- * @returns {string} The flag emoji corresponding to the given country code.
+ * Form component for adding details about a selected city.
+ *
+ * The form allows users to:
+ * - Add/edit the city's name and see a corresponding country emoji.
+ * - Select/edit the date of their trip.
+ * - Add/edit notes about their trip to the city.
+ * - Submit the form to add or update the city details.
+ * - Remove a city from the list of visited cities
+ *
+ * The form also interacts with:
+ * - The `CityContext` to get/update the current city and list of cities.
+ * - The `useUrlPosition` hook to get the clicked coordinates from the URL.
+ * - The `useGeocoding` hook to perform geocoding and reverse geocoding.
  */
-export function convertToEmoji(countryCode: string): string {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-}
-
 function Form(): JSX.Element {
   const [country, setCountry] = useState<string>('');
   const [cityName, setCityName] = useState<string>('');
@@ -49,39 +43,15 @@ function Form(): JSX.Element {
   const lng = clickedPosition?.[1];
   const [emoji, setEmoji] = useState<string>('');
 
-  // fetch data about the location the user has clicked
-  useEffect(() => {
-    // if the user goes to /app/form and doesn't add the lat and lng query string then simply return else the geocoding service will default to the users location
-    if (!lat && !lng) return;
-
-    (async () => {
-      try {
-        setIsLoadingGeocoding(true);
-        const res = await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
-        const data: LocationInfoType = await res.json();
-
-        // if the user clicks somewhere thats not considered part of a country, show them a nice error message
-        if (!data.countryCode) {
-          throw new Error(
-            "👋 That doesn't seem to be a city. Click somewhere else 😉"
-          );
-        }
-
-        setCityName(data.city || data.locality || '');
-        setCountry(data.countryName);
-        setEmoji(convertToEmoji(data.countryCode));
-        setGeocodingError(null);
-      } catch (error) {
-        if (error instanceof Error) {
-          setGeocodingError(error.message);
-        } else {
-          setGeocodingError('An unexpected error occurred.');
-        }
-      } finally {
-        setIsLoadingGeocoding(false);
-      }
-    })();
-  }, [lat, lng]);
+  useGeocoding(
+    lat,
+    lng,
+    setCityName,
+    setCountry,
+    setEmoji,
+    setGeocodingError,
+    setIsLoadingGeocoding
+  );
 
   /**
    * Generic handler for input changes.
@@ -154,51 +124,24 @@ function Form(): JSX.Element {
     <>
       {geocodingError == null && (
         <FormWrapper onSubmit={handleSubmit}>
-          {/* City name input */}
-          <Row>
-            <label htmlFor='cityName'>City name</label>
-            <Input
-              id='cityName'
-              onChange={(e) => handleInputChange(setCityName, e)}
-              value={cityName}
-            />
-            {/* Placeholder for future flag emoji display */}
-            <Flag>{emoji}</Flag>
-          </Row>
-
-          {/* Date input */}
-          <Row>
-            <label htmlFor='date'>When did you go to {cityName}?</label>
-            <DatePicker
-              selected={new Date(date)}
-              onChange={(selectedDate) => {
-                if (selectedDate) {
-                  setDate(selectedDate.toISOString().split('T')[0]);
-                }
-              }}
-              dateFormat='yyyy-MM-dd'
-              customInput={<CustomDatePickerInput />}
-            />
-            {/* <DatePicker
-              onChange={(date) => {
-                if(date != null) setDate(date)
-              }}
-              selected={date}
-              customInput={<CustomDatePickerInput />}
-            /> */}
-          </Row>
-
-          {/* Notes textarea */}
-          <Row>
-            <label htmlFor='notes'>Notes about your trip to {cityName}</label>
-            <TextArea
-              id='notes'
-              onChange={(e) => handleInputChange(setNotes, e)}
-              value={notes}
-            />
-          </Row>
-
-          {/* Form action buttons */}
+          <CityInput
+            value={cityName}
+            emoji={emoji}
+            onChange={(e) => handleInputChange(setCityName, e)}
+          />
+          <DateInput
+            date={date}
+            onChange={(selectedDate) => {
+              if (selectedDate) {
+                setDate(selectedDate.toISOString().split('T')[0]);
+              }
+            }}
+          />
+          <NotesInput
+            cityName={cityName}
+            value={notes}
+            onChange={(e) => handleInputChange(setNotes, e)}
+          />
           <ButtonWrapper>
             <Button type='primary' buttonType='submit'>
               Add
@@ -248,75 +191,7 @@ const FormWrapper = styled.form`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.3125rem;
-  position: relative;
-`;
-
-const Input = styled.input`
-  background-color: var(--color-light--3);
-  border: none;
-  border-radius: 5px;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 0.5rem 0.75rem;
-  transition: all 0.2s;
-  width: 100%;
-
-  &:active {
-    background-color: #fff;
-  }
-`;
-
-// I have to go through this round-about way to style the date picker because its from the react-date-picker library
-const StyledDatePicker = styled.input`
-  background-color: var(--color-light--3);
-  border: none;
-  border-radius: 5px;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 0.5rem 0.75rem;
-  transition: all 0.2s;
-  width: 100%;
-
-  &:active {
-    background-color: #fff;
-  }
-`;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CustomDatePickerInput = React.forwardRef<HTMLInputElement, any>(
-  ({ value, onClick }, ref) => (
-    <StyledDatePicker type='text' value={value} onClick={onClick} ref={ref} />
-  )
-);
-CustomDatePickerInput.displayName = 'CustomDatePickerInput';
-
-const TextArea = styled.textarea`
-  background-color: var(--color-light--3);
-  border: none;
-  border-radius: 5px;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 1.5rem 0.75rem;
-  transition: all 0.2s;
-  width: 100%;
-
-  &:active {
-    background-color: #fff;
-  }
-`;
-
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const Flag = styled.span`
-  position: absolute;
-  right: 0.625rem;
-  top: 1.6875rem;
-  font-size: 1.75rem;
 `;
