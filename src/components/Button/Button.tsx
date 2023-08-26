@@ -5,6 +5,7 @@ type ButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   type: 'primary' | 'back' | 'position';
+  buttonType?: 'button' | 'submit' | 'reset' | undefined;
 };
 
 /**
@@ -12,10 +13,16 @@ type ButtonProps = {
  * @param children The content of the button
  * @param onClick The function to be called on click event
  * @param type A condition for adding a css class
+ * @param buttonType The type of html button it is, e.g. a submit button
  */
-function Button({ children, onClick, type }: ButtonProps) {
+function Button({
+  children,
+  onClick,
+  type,
+  buttonType = 'button',
+}: ButtonProps) {
   return (
-    <ButtonStyles className={type} onClick={onClick}>
+    <ButtonStyles className={type} onClick={onClick} type={buttonType}>
       {children}
     </ButtonStyles>
   );

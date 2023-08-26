@@ -7,6 +7,9 @@ import { useUrlPosition } from '../../hooks/useUrlPosition';
 import { LocationInfoType } from '../../types/LocationType';
 import Loader from '../Loader';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0
 const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 
@@ -144,11 +147,15 @@ function Form(): JSX.Element {
           {/* Date input */}
           <Row>
             <label htmlFor='date'>When did you go to {cityName}?</label>
-            <Input
-              id='date'
-              type='date'
-              onChange={(e) => handleInputChange(setDate, e)}
-              value={date}
+            <DatePicker
+              selected={new Date(date)}
+              onChange={(selectedDate) => {
+                if (selectedDate) {
+                  setDate(selectedDate.toISOString().split('T')[0]);
+                }
+              }}
+              dateFormat='yyyy-MM-dd'
+              customInput={<CustomDatePickerInput />}
             />
           </Row>
 
@@ -164,7 +171,9 @@ function Form(): JSX.Element {
 
           {/* Form action buttons */}
           <ButtonWrapper>
-            <Button type='primary'>Add</Button>
+            <Button type='primary' buttonType='submit'>
+              Add
+            </Button>
             <BackButton endpoint={position} />
           </ButtonWrapper>
         </FormWrapper>
@@ -231,6 +240,30 @@ const Input = styled.input`
     background-color: #fff;
   }
 `;
+
+// I have to go through this round-about way to style the date picker because its from the react-date-picker library
+const StyledDatePicker = styled.input`
+  background-color: var(--color-light--3);
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s;
+  width: 100%;
+
+  &:active {
+    background-color: #fff;
+  }
+`;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CustomDatePickerInput = React.forwardRef<HTMLInputElement, any>(
+  ({ value, onClick }, ref) => (
+    <StyledDatePicker type='text' value={value} onClick={onClick} ref={ref} />
+  )
+);
+CustomDatePickerInput.displayName = 'CustomDatePickerInput';
 
 const TextArea = styled.textarea`
   background-color: var(--color-light--3);
