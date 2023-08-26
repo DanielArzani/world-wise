@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import formatDate from '../../utils/formateDate';
 import { useParams } from 'react-router-dom';
 import Loader from '../Loader';
 import { useCity } from '../../contexts/CityContext';
 import BackButton from '../BackButton';
+import formatDate from '../../utils/formateDate';
 
 /**
  * Displays information about a specific city as well as a link for further research and personal notes. Also handles fetching the specific city.
  */
 function CityInfo() {
   const { id } = useParams();
-  const { currentCity, isLoading, getCity } = useCity();
+  const { currentCity, isLoading, getCity, cityData } = useCity();
   // const { isLoading, setIsLoading } = useCity();
   // const [currentCity, setCurrentCity] = useState<CityType | undefined>();
 
@@ -68,7 +68,7 @@ function CityInfo() {
 
       <DateVisitedWrapper>
         <h3>You went to {cityName} on</h3>
-        <p>{formatDate(date)}</p>
+        {<p>{formatDate(date ? date.toString() : '')}</p>}
       </DateVisitedWrapper>
 
       <NotesWrapper>

@@ -31,7 +31,7 @@ function VisitedCities() {
           {cityData.map((data) => (
             <CityListItem
               key={data.id}
-              dateVisited={data.date}
+              dateVisited={data.date ? data.date.toString() : ''}
               flag={data.emoji}
               endpoint={`${data.id}?lat=${data.position.lat}&lng=${data.position.lng}`}
               cityName={data.cityName}

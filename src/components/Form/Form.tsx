@@ -33,8 +33,8 @@ function Form(): JSX.Element {
   const [cityName, setCityName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
 
-  const [notes, setNotes] = useState<string>('');
   const { currentCity, setCurrentCity, cityData, setCityData } = useCity();
+  const [notes, setNotes] = useState<string>('');
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState<boolean>(false);
   const [geocodingError, setGeocodingError] = useState<string | null>(null);
   const clickedPosition = useUrlPosition();
@@ -91,6 +91,8 @@ function Form(): JSX.Element {
     };
 
     setCityData([...cityData, newCityObject]);
+    console.log('CITY...', cityData);
+
     setCurrentCity(newCityObject);
   };
 
@@ -146,7 +148,7 @@ function Form(): JSX.Element {
             <Button type='primary' buttonType='submit'>
               Add
             </Button>
-            <BackButton endpoint={position} />
+            <BackButton endpoint='/app/cities' />
           </ButtonWrapper>
         </FormWrapper>
       )}

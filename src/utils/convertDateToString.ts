@@ -5,6 +5,8 @@
  * @returns The formatted date string in 'YYYY-MM-DD' format.
  */
 export default function convertDateToString(date: Date): string {
+  if (!date) return 'Unknown Date';
+
   // Convert the date object to an ISO string format 'YYYY-MM-DDTHH:MM:SS.sssZ'
   const isoString = date.toISOString();
 

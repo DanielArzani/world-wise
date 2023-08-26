@@ -61,6 +61,7 @@ function CityProvider({ children }: CityProviderProps) {
   const getCity = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
+
       const res = await fetch(`${BASE_URL}/cities/${id}`, {
         headers: {
           'Cache-Control': 'no-cache',
