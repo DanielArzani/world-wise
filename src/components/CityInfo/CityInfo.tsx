@@ -11,9 +11,7 @@ import formatDate from '../../utils/formateDate';
  */
 function CityInfo() {
   const { id } = useParams();
-  const { currentCity, isLoading, getCity, cityData } = useCity();
-  // const { isLoading, setIsLoading } = useCity();
-  // const [currentCity, setCurrentCity] = useState<CityType | undefined>();
+  const { currentCity, isLoading, getCity } = useCity();
 
   // FIXME: The City information appears briefly then flickers away then the loading state appears then the city information comes back with the new city information.
   // In order to fix this, I moved the code within the getCity function from the CityContext to here.
@@ -24,25 +22,6 @@ function CityInfo() {
       getCity(Number(id));
     }
   }, [id, getCity]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const res = await fetch(`${BASE_URL}/cities/${id}`, {
-  //         headers: {
-  //           'Cache-Control': 'no-cache',
-  //         },
-  //       });
-  //       const data: CityType = await res.json();
-  //       setCurrentCity(data);
-  //     } catch (error) {
-  //       if (error) console.error(error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   })();
-  // }, [id, setIsLoading]);
 
   if (!currentCity || isLoading) {
     return (

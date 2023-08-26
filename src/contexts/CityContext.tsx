@@ -115,7 +115,7 @@ function CityProvider({ children }: CityProviderProps) {
       setCityData,
       createCity,
     }),
-    [cityData, isLoading, currentCity, getCity]
+    [cityData, isLoading, currentCity, getCity, createCity]
   );
 
   return <CityContext.Provider value={value}>{children}</CityContext.Provider>;
@@ -124,10 +124,12 @@ function CityProvider({ children }: CityProviderProps) {
 /**
  * Provides access to the CityContext. When called, this hook returns:
  * - cityData: An array of cities (CityType[]).
+ * - setCityData: The setter function for the cityData
  * - isLoading: A boolean indicating whether the data is loading.
- * - currentCityId: The ID of the current city.
- * - setCurrentCityId: A setter function for updating the current city ID.
+ * - currentCity: The currently selected city
+ * - setCurrentCity: A setter function for the currentCity.
  * - GetCity: Function that will get a city based on the id
+ * - CreateCity: A function will create a new city and add it to the json file of cities
  */
 function useCity() {
   const context = useContext(CityContext);

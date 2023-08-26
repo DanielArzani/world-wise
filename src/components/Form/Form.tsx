@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent, useMemo } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
 import BackButton from '../BackButton';
