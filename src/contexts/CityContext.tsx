@@ -120,26 +120,29 @@ function CityProvider({ children }: CityProviderProps) {
    * Fetches for a specific city. Its memoized so that its not regenerated on every render when called by a useEffect hook causing an infinite loop
    * @param id The id of a specific city
    */
-  const getCity = useCallback(async (id: number) => {
-    // there's no need to call the api again if the id is already that of the currentCity
-    if (Number(id) === state.currentCity?.id) return;
+  const getCity = useCallback(
+    async (id: number) => {
+      // there's no need to call the api again if the id is already that of the currentCity
+      if (Number(id) === state.currentCity?.id) return;
 
-    try {
-      dispatch({ type: 'loading', payload: true });
-      const res = await fetch(`${BASE_URL}/cities/${id}`, {
-        headers: {
-          'Cache-Control': 'no-cache',
-        },
-      });
-      const data: CityType = await res.json();
-      dispatch({ type: 'city/loaded', payload: data });
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-        dispatch({ type: 'rejected', payload: error.message });
+      try {
+        dispatch({ type: 'loading', payload: true });
+        const res = await fetch(`${BASE_URL}/cities/${id}`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
+        const data: CityType = await res.json();
+        dispatch({ type: 'city/loaded', payload: data });
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error);
+          dispatch({ type: 'rejected', payload: error.message });
+        }
       }
-    }
-  }, []);
+    },
+    [state.currentCity]
+  );
 
   /**
    * Creates a new city
