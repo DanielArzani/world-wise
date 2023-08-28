@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { useCity } from '../../contexts/CityContext';
 import useGeolocation from '../../hooks/useGeolocation';
 import Button from '../Button';
+import User from '../User';
 
 /**
  * The application map, which uses react-leaflet. It will display the location on the map depending on the searchParams of lat and lng
@@ -44,6 +45,10 @@ function Map() {
 
   return (
     <Wrapper>
+      <UserStyles>
+        <User />
+      </UserStyles>
+
       {!geolocationPosition && (
         <Button type='position' onClick={getPosition}>
           {isLoadingPosition ? 'Loading...' : 'Use your position'}
@@ -88,6 +93,26 @@ export default React.memo(Map);
 
 const Wrapper = styled.div`
   background-color: gray;
+  position: relative;
+`;
+
+const UserStyles = styled.div`
+  position: absolute;
+  top: 2.625rem;
+  right: 2.625rem;
+
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+
+  background-color: var(--color-dark--1);
+  border-radius: 7px;
+  box-shadow: 0 0.5rem 1.5rem #242a2e80;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.625rem 0.875rem;
+
+  z-index: 1111;
 `;
 
 /**
