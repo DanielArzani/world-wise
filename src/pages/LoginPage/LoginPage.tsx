@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import media from '../../utils/mediaQueries';
 import Header from '../../components/Header';
@@ -10,21 +10,24 @@ import Button from '../../components/Button';
  * The page which displays the form to login to use the application
  */
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [emailValue, setEmailValue] = useState('jack@example.com');
   const [passwordValue, setPasswordValue] = useState('qwerty');
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    const isCorrectCredentials = login(emailValue, passwordValue);
-
-    if (isCorrectCredentials === true) {
-      navigate('/app');
-    } else {
-      alert('Incorrect Credentials');
+    if (emailValue && passwordValue) {
+      login(emailValue, passwordValue);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      // if you press the back button then since the user is still logged in it will immediately move them back to the application page. Replace will replace the login page in the history with the /app route
+      navigate('/app', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Wrapper>
