@@ -1,9 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../contexts/FakeAuthContext';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 function User() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
@@ -17,7 +19,14 @@ function User() {
         />
       </ImageWrapper>
       <P>Welcome {user?.name}</P>
-      <LogoutButton onClick={logout}>Logout</LogoutButton>
+      <LogoutButton
+        onClick={() => {
+          logout();
+          navigate('/');
+        }}
+      >
+        Logout
+      </LogoutButton>
     </Wrapper>
   );
 }
