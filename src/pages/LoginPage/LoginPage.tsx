@@ -20,7 +20,7 @@ function LoginPage() {
     const isCorrectCredentials = login(emailValue, passwordValue);
 
     if (isCorrectCredentials === true) {
-      navigate('/app/cities');
+      navigate('/app');
     } else {
       alert('Incorrect Credentials');
     }
