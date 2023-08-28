@@ -1,30 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import media from '../../utils/mediaQueries';
 import Header from '../../components/Header';
-import LoginLink from '../../components/LoginLink';
+import { useAuth } from '../../contexts/FakeAuthContext';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../components/Button';
 
 /**
  * The page which displays the form to login to use the application
  */
 function LoginPage() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [emailValue, setEmailValue] = useState('jack@example.com');
+  const [passwordValue, setPasswordValue] = useState('qwerty');
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    const isCorrectCredentials = login(emailValue, passwordValue);
+
+    if (isCorrectCredentials === true) {
+      navigate('/app/cities');
+    } else {
+      alert('Incorrect Credentials');
+    }
+  };
+
   return (
     <Wrapper>
       <Header />
       <FormWrapper>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <FormControls>
             <Label htmlFor='email'>Email Address</Label>
-            <Input type='text' id='email' autoComplete='email' />
+            <Input
+              type='text'
+              id='email'
+              autoComplete='email'
+              value={emailValue}
+              onChange={(e) => setEmailValue(e.target.value)}
+            />
           </FormControls>
 
           <FormControls>
             <Label htmlFor='password'>Password</Label>
-            <Input type='password' id='password' />
+            <Input
+              type='password'
+              id='password'
+              value={passwordValue}
+              onChange={(e) => setPasswordValue(e.target.value)}
+            />
           </FormControls>
 
           <LinkWrapper>
-            <LoginLink endpoint='/app/cities'>Login</LoginLink>
+            <Button buttonType='submit' type='primary'>
+              Login
+            </Button>
           </LinkWrapper>
         </Form>
       </FormWrapper>
@@ -98,4 +129,9 @@ const Input = styled.input`
 
 const LinkWrapper = styled.div`
   align-self: start;
+
+  & > button {
+    border: none;
+    border-radius: 10px;
+  }
 `;

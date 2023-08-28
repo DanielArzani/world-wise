@@ -12,30 +12,33 @@ import VisitedCountries from '../VisitedCountries';
 import CityInfo from '../CityInfo';
 import Form from '../Form';
 import { CityProvider } from '../../contexts/CityContext';
+import { AuthProvider } from '../../contexts/FakeAuthContext';
 
 function App() {
   return (
-    <CityProvider>
-      <Wrapper>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='pricing' element={<PricingPage />} />
-            <Route path='product' element={<ProductPage />} />
-            <Route path='login' element={<LoginPage />} />
-            <Route path='app' element={<ApplicationPage />}>
-              <Route index element={<Navigate replace to='cities' />} />
-              <Route path='cities' element={<VisitedCities />} />
-              <Route path='cities/:id' element={<CityInfo />} />
+    <AuthProvider>
+      <CityProvider>
+        <Wrapper>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route path='pricing' element={<PricingPage />} />
+              <Route path='product' element={<ProductPage />} />
+              <Route path='login' element={<LoginPage />} />
+              <Route path='app' element={<ApplicationPage />}>
+                <Route index element={<Navigate replace to='cities' />} />
+                <Route path='cities' element={<VisitedCities />} />
+                <Route path='cities/:id' element={<CityInfo />} />
 
-              <Route path='countries' element={<VisitedCountries />} />
-              <Route path='form' element={<Form />} />
-            </Route>
-            <Route path='*' element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
-      </Wrapper>
-    </CityProvider>
+                <Route path='countries' element={<VisitedCountries />} />
+                <Route path='form' element={<Form />} />
+              </Route>
+              <Route path='*' element={<NotFoundPage />} />
+            </Routes>
+          </BrowserRouter>
+        </Wrapper>
+      </CityProvider>
+    </AuthProvider>
   );
 }
 

@@ -2,8 +2,9 @@ import React, { createContext, useContext, useReducer } from 'react';
 import { UserType } from '../types/UserType';
 
 type AuthContextType = {
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => boolean;
   logout: () => void;
+  user: UserType | null;
 };
 
 /**
@@ -73,8 +74,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     // On success:
     if (FAKE_USER.email === email && FAKE_USER.password === password) {
       dispatch({ type: 'login', payload: FAKE_USER });
+      return true;
     } else {
-      alert('Incorrect Credentials');
+      return false;
     }
   }
 
@@ -97,6 +99,11 @@ function AuthProvider({ children }: AuthProviderProps) {
 /**
  * Custom hook to provide access to the AuthContext.
  * Throws an error if used outside of the AuthProvider component.
+ *
+ * Provides access to the AuthContext. When called, this hook returns:
+ * - login: Checks where user credentials are correct then logs the user in
+ * - logout: Logs the user out
+ * - user: Either the currently logged in user or null
  */
 function useAuth() {
   const context = useContext(AuthContext);
