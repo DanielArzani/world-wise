@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { UserType } from '../types/UserType';
 
+type AuthContextType = {
+  login: (email: string, password: string) => void;
+  logout: () => void;
+};
+
 /**
  * Context for authentication-related data and functions.
  */
-const AuthContext = createContext(null);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 type State = {
   isAuthenticated: boolean;
@@ -13,7 +18,7 @@ type State = {
 
 const initialState: State = {
   isAuthenticated: false,
-  user: { email: '', password: '' },
+  user: { name: '', email: '', password: '', avatar: '' },
 };
 
 type Action = { type: 'login'; payload: UserType } | { type: 'logout' };
@@ -35,9 +40,16 @@ function authReducer(state: State, action: Action): State {
       };
 
     default:
-      return state;
+      throw new Error('Unknown Action');
   }
 }
+
+const FAKE_USER = {
+  name: 'Jack',
+  email: 'jack@example.com',
+  password: 'qwerty',
+  avatar: 'https://i.pravatar.cc/100?u=zz',
+};
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -58,9 +70,12 @@ function AuthProvider({ children }: AuthProviderProps) {
    * @param password The user's password.
    */
   function login(email: string, password: string) {
-    // Here, you might make an API call or fake the authentication.
     // On success:
-    dispatch({ type: 'login', payload: { email, password } }); // Storing only email for this example.
+    if (FAKE_USER.email === email && FAKE_USER.password === password) {
+      dispatch({ type: 'login', payload: FAKE_USER });
+    } else {
+      alert('Incorrect Credentials');
+    }
   }
 
   /**
@@ -70,14 +85,20 @@ function AuthProvider({ children }: AuthProviderProps) {
     dispatch({ type: 'logout' });
   }
 
-  return <AuthContext.Provider value={null}>{children}</AuthContext.Provider>;
+  const value = {
+    login,
+    logout,
+    user: state.user,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 /**
  * Custom hook to provide access to the AuthContext.
  * Throws an error if used outside of the AuthProvider component.
  */
-export function useAuth() {
+function useAuth() {
   const context = useContext(AuthContext);
   if (context == null)
     throw new Error('AuthContext was used outside the AuthProvider');
@@ -85,4 +106,4 @@ export function useAuth() {
   return context;
 }
 
-export { AuthProvider };
+export { AuthProvider, useAuth };
