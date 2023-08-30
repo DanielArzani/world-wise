@@ -8,15 +8,16 @@ import CityInfo from '../CityInfo';
 import ErrorBoundary from '../ErrorBoundary';
 import FullPageLoader from '../FullPageLoader';
 
+import VisitedCities from '../VisitedCities';
+import VisitedCountries from '../VisitedCountries';
+import Form from '../Form';
+
 const ProductPage = lazy(() => import('../../pages/ProductPage'));
 const PricingPage = lazy(() => import('../../pages/PricingPage'));
 const HomePage = lazy(() => import('../../pages/HomePage'));
 const NotFoundPage = lazy(() => import('../NotFoundPage'));
 const ApplicationPage = lazy(() => import('../../pages/ApplicationPage'));
 const LoginPage = lazy(() => import('../../pages/LoginPage'));
-const VisitedCities = lazy(() => import('../VisitedCities'));
-const VisitedCountries = lazy(() => import('../VisitedCountries'));
-const Form = lazy(() => import('../Form'));
 const ProtectedRoutePage = lazy(() => import('../../pages/ProtectedRoutePage'));
 
 function App() {
