@@ -3,9 +3,10 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { CityProvider } from '../../contexts/CityContext';
 import { AuthProvider } from '../../contexts/FakeAuthContext';
-import Loader from '../Loader';
+
 import CityInfo from '../CityInfo';
 import ErrorBoundary from '../ErrorBoundary';
+import FullPageLoader from '../FullPageLoader';
 
 const ProductPage = lazy(() => import('../../pages/ProductPage'));
 const PricingPage = lazy(() => import('../../pages/PricingPage'));
@@ -24,7 +25,7 @@ function App() {
       <CityProvider>
         <Wrapper>
           <BrowserRouter>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<FullPageLoader />}>
               <ErrorBoundary>
                 <Routes>
                   <Route path='/' element={<HomePage />} />
