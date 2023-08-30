@@ -56,6 +56,7 @@ function Map() {
       )}
 
       <MapContainer
+        key={position.join(',')} // to prevent error due to lazy loading since leaflet will initialize this component on mount
         style={{ minHeight: '100%' }}
         center={position}
         zoom={13}
