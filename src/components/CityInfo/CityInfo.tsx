@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import Loader from '../Loader';
@@ -12,14 +12,24 @@ import formatDate from '../../utils/formateDate';
 function CityInfo() {
   const { id } = useParams();
   const { currentCity, isLoading, getCity } = useCity();
-
-  // FIXME: The City information appears briefly then flickers away then the loading state appears then the city information comes back with the new city information.
-  // In order to fix this, I moved the code within the getCity function from the CityContext to here.
-  // If currentCity and setCurrentCity are local then it will work but when I bring them in from context, this problem appears
+  // This and the setTimeout are both used to deal with a problem where the previous CityInfo component briefly flickers in then out
+  const [displayContent, setDisplayContent] = useState(false);
 
   useEffect(() => {
     if (id != null) {
+      // Reset displayContent to false when city changes
+      setDisplayContent(false);
+
+      // Fetch the city details
       getCity(Number(id));
+
+      // After 1 second, set displayContent to true
+      const timer = setTimeout(() => {
+        setDisplayContent(true);
+      }, 10);
+
+      // Cleanup the timer when component unmounts or id changes
+      return () => clearTimeout(timer);
     }
   }, [id, getCity]);
 
@@ -30,6 +40,9 @@ function CityInfo() {
       </LoadingSpinnerWrapper>
     );
   }
+
+  // Only proceed to render content if displayContent is true
+  if (!displayContent) return null;
 
   const { cityName, country, emoji, date, notes } = currentCity;
 
